@@ -43,6 +43,15 @@
       background: #fafafa;
     }
   </style>
+    <script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("paid") === "1") {
+      localStorage.setItem("paid", "1");
+    }
+    if (!localStorage.getItem("paid")) {
+      window.location.href = "/index.html";
+    }
+  </script>
 </head>
 
 <body>
