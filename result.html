@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>判断结果</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", Arial;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 24px;
+      color: #111;
+    }
+    .card {
+      max-width: 640px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 14px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    }
+    .tag {
+      display: inline-block;
+      background: #111;
+      color: #fff;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-size: 22px;
+      margin-bottom: 16px;
+    }
+    h3 {
+      font-size: 16px;
+      margin-top: 28px;
+      margin-bottom: 8px;
+    }
+    p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #333;
+    }
+    .risk {
+      background: #f3f3f3;
+      padding: 16px;
+      border-radius: 10px;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+    .btn {
+      margin-top: 32px;
+      width: 100%;
+      padding: 14px;
+      background: #111;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .foot {
+      margin-top: 14px;
+      font-size: 12px;
+      color: #999;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <span class="tag" id="typeTag"></span>
+
+  <h1 id="title"></h1>
+
+  <div id="analysis"></div>
+
+  <div id="riskBlock"></div>
+
+  <button class="btn" onclick="goNext()">
+    我该怎么验证？
+  </button>
+
+  <div class="foot">
+    基于你的选择生成 · 不记录任何个人信息
+  </div>
+</div>
+
+<script>
+  const answers = JSON.parse(localStorage.getItem("answers") || "[]");
+
+  let score = {
+    fantasy: 0,
+    rational: 0,
+    impulse: 0
+  };
+  let commitCount = 0;
+
+  answers.forEach((a, index) => {
+    const weight = index >= 8 ? 2 : 1; // 后 7 题权重更高
+
+    if (a === "commit") {
+      commitCount++;
+    }
+    if (score[a] !== undefined) {
+      score[a] += weight;
+    }
+  });
+
+  let type = "rational";
+  if (score.fantasy > score.rational && score.fantasy > score.impulse) {
+    type = "fantasy";
+  }
+  if (score.impulse > score.rational && score.impulse > score.fantasy) {
+    type = "impulse";
+  }
+
+  const config = {
+    fantasy: {
+      tag: "决策状态：自我说服型",
+      title: "你不是在瞎选，\n但你正在用希望支撑现实。",
+      analysis: `
+        <p>你做这个决定时，逻辑并非缺席。</p>
+        <p>但你的信心，更多来自于<strong>“如果成功会怎样”</strong>，而不是<strong>“现在是否站得住”</strong>。</p>
+        <p>这会让你在缺乏反馈时，持续投入耐心与时间。</p>
+      `
+    },
+    rational: {
+      tag: "决策状态：理性评估型",
+      title: "你的判断是克制的，\n但仍需要一次现实校准。",
+      analysis: `
+        <p>你清楚风险，也能接受不确定性。</p>
+        <p>但目前的问题是：<strong>现实反馈不足以支持继续扩大投入。</strong></p>
+        <p>你需要的不是更多分析，而是一个低成本验证。</p>
+      `
+    },
+    impulse: {
+      tag: "决策状态：执行冲动型",
+      title: "你正在用行动，\n对抗内心的不安。",
+      analysis: `
+        <p>这个选择承载了你对现状的不满。</p>
+        <p>行动本身让你感觉“在往前”，但方向是否正确仍未被验证。</p>
+        <p>继续冲可能缓解焦虑，但不一定降低风险。</p>
+      `
+    }
+  };
+
+  document.getElementById("typeTag").innerText = config[type].tag;
+  document.getElementById("title").innerText = config[type].title;
+  document.getElementById("analysis").innerHTML = config[type].analysis;
+
+  if (commitCount >= 2) {
+    document.getElementById("riskBlock").innerHTML = `
+      <h3>风险提示</h3>
+      <div class="risk">
+        你已经为这个决定投入过不可回收成本。  
+        接下来最危险的不是失败，而是<strong>因为不甘心而继续投入</strong>。
+      </div>
+    `;
+  }
+
+  function goNext() {
+    window.location.href = "next.html";
+  }
+</script>
+
+</body>
+</html>
