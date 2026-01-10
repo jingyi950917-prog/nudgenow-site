@@ -3,52 +3,84 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NudgeNow</title>
+  <title>这个决定，值不值得做？</title>
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-      background: #0f172a;
-      color: #e5e7eb;
       margin: 0;
-      padding: 40px 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial;
+      background: #f7f7f7;
+      color: #111;
     }
-    .card {
-      max-width: 420px;
+    .wrap {
+      max-width: 720px;
       margin: 0 auto;
-      background: #020617;
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 20px 40px rgba(0,0,0,.4);
+      padding: 24px 16px 60px;
     }
     h1 {
-      font-size: 24px;
+      font-size: 26px;
+      line-height: 1.3;
       margin-bottom: 12px;
     }
     p {
-      line-height: 1.6;
-      color: #cbd5f5;
-    }
-    button {
-      width: 100%;
-      margin-top: 20px;
-      padding: 14px;
       font-size: 16px;
-      border-radius: 12px;
-      border: none;
-      background: #6366f1;
-      color: white;
+      line-height: 1.7;
+      color: #444;
+    }
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.06);
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      background: #111;
+      color: #fff;
+      padding: 14px 0;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 16px;
+      margin-top: 16px;
+    }
+    .hint {
+      font-size: 13px;
+      color: #888;
+      margin-top: 8px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>你现在做的这个决定</h1>
+  <div class="wrap">
+    <h1>你现在做的这个决定，<br>大概率会赚钱吗？</h1>
+
     <p>
-      不是为了成功，<br/>
-      而是为了确认：<br/>
-      <strong>你是不是在骗自己。</strong>
+      大多数人失败，不是因为不努力，  
+      而是 **在一开始就选错了方向**。
     </p>
-    <button>开始自检</button>
+
+    <div class="card">
+      <p>
+        这个判断工具不会给你鸡汤，  
+        只会基于你的真实选择，告诉你：
+      </p>
+      <ul>
+        <li>你是在「理性判断」还是「自我说服」</li>
+        <li>这个决定的最大风险点在哪里</li>
+        <li>你现在最应该做的一步是什么</li>
+      </ul>
+
+      <a class="btn" href="#">
+        开始判断（约 3 分钟）
+      </a>
+
+      <div class="hint">
+        不需要注册 · 不记录隐私
+      </div>
+    </div>
   </div>
 </body>
 </html>
