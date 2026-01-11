@@ -11,6 +11,12 @@
 <script>
 const data = JSON.parse(localStorage.getItem("realityCheck")) || [];
 
+// Count unknowns
+let unknown = 0;
+data.forEach(v => {
+  if (!v || v.toLowerCase().includes("don")) unknown++;
+});
+
 const fixed = Number(data[1]) || 0;
 const variable = Number(data[2]) || 0;
 const now = Number(data[5]) || 0;
@@ -43,12 +49,32 @@ if (marketValue < burn * 12) {
   message += "<br><br>Your market may be too small to support this business.";
 }
 
+let realityBlock = "";
+
+if (unknown >= 3) {
+  realityBlock = `
+    <hr>
+    <h3>⚠️ You do not have real numbers</h3>
+    <p>
+      You answered “I don’t know” to multiple critical questions.
+      This means you are not running a business — you are guessing.
+    </p>
+    <p>
+      If you want a real verdict, you need to collect real data for 14–30 days.
+    </p>
+    <a class="button" href="https://YOURDOMAIN.com/tracker">Start Tracking Reality</a>
+    <p class="small">
+      After tracking, come back and run this check again.
+    </p>
+  `;
+}
+
 document.getElementById("card").innerHTML = `
   <h2>${status}</h2>
   <p>${message}</p>
+  ${realityBlock}
   <p class="small">
     This verdict is based only on the numbers you provided.
-    If you didn’t know some of them, your reality is uncertain.
   </p>
 `;
 </script>
