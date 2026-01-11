@@ -40,53 +40,90 @@ button{
 const data = JSON.parse(localStorage.getItem("realityCheck") || "[]");
 
 function get(q){
-  return data.find(x => x.q === q)?.a || 0;
+  return Number(data.find(x => x.q === q)?.a || 0);
+}
+function getText(q){
+  return (data.find(x => x.q === q)?.a || "").toString().toLowerCase();
 }
 
-const revenueNow = Number(get("What is your current monthly revenue? (USD)"));
-const revenueBefore = Number(get("What was your revenue 30 days ago? (USD)"));
-const weeklyHours = Number(get("How many hours per week do you spend on this business?"));
-const marketing = Number(get("How much have you spent on marketing? (USD)"));
-const customers = Number(get("How many paying customers do you have now?"));
-const price = Number(get("How much would a typical customer pay? (USD)"));
+/* core numbers */
+const revenueNow = get("What is your current monthly revenue? (USD)");
+const revenueBefore = get("What was your revenue 30 days ago? (USD)");
+const weeklyHours = get("How many hours per week do you spend on this business?");
+const marketing = get("How much have you spent on marketing? (USD)");
+const customers = get("How many paying customers do you have now?");
+const price = get("How much would a typical customer pay? (USD)");
+const fixed = get("What is your current monthly fixed cost? (USD)");
+const variable = get("What is your monthly variable cost? (USD)");
 
-let growth = revenueNow - revenueBefore;
-let hourly = weeklyHours>0 ? revenueNow/(weeklyHours*4) : 0;
+const repeat = getText("Do you have any repeat customers? (yes/no)");
+const track = getText("Do you track your numbers regularly? (yes/no)");
+const breakeven = getText("Do you know your break-even point? (yes/no)");
 
+/* derived reality */
+const growth = revenueNow - revenueBefore;
+const totalCost = fixed + variable + marketing;
+const hourly = weeklyHours > 0 ? revenueNow / (weeklyHours * 4) : 0;
+const profit = revenueNow - (fixed + variable);
+
+/* verdict */
 let html = "";
 
-if(revenueNow < marketing){
-  html += `<h2 style="color:#ff4d4f">🔴 You are bleeding</h2>
-  <p>You spend more than you make.</p>`;
-}else{
-  html += `<h2 style="color:#52c41a">🟢 You are not bleeding</h2>`;
+/* bleeding test */
+if (revenueNow < totalCost) {
+  html += `<h2 style="color:#ff4d4f">🔴 You are being drained</h2>
+  <p>Your business is consuming more cash than it produces.</p>`;
+} else {
+  html += `<h2 style="color:#52c41a">🟢 You are not bleeding</h2>
+  <p>At least your business is not eating itself.</p>`;
 }
 
+/* growth */
+if (growth <= 0) {
+  html += `<p style="color:#ff4d4f">Revenue is not growing.</p>`;
+} else {
+  html += `<p style="color:#52c41a">Revenue is growing: +$${growth}</p>`;
+}
+
+/* effort */
+if (hourly < 10) {
+  html += `<p style="color:#ffa940">Your time is worth less than minimum wage.</p>`;
+}
+
+if (customers > 0 && repeat !== "yes") {
+  html += `<p style="color:#ffa940">You have customers, but no repeat buyers. This is fragile.</p>`;
+}
+
+if (track !== "yes") {
+  html += `<p style="color:#ffa940">You are operating blind — no tracking.</p>`;
+}
+
+if (breakeven !== "yes") {
+  html += `<p style="color:#ff4d4f">You don't know when this business stops losing money.</p>`;
+}
+
+/* numbers */
 html += `
 <hr>
 <p><b>Revenue (30 days):</b> $${revenueNow}</p>
 <p><b>Change:</b> $${growth}</p>
+<p><b>Total monthly cost:</b> $${fixed + variable}</p>
+<p><b>Marketing sunk:</b> $${marketing}</p>
+<p><b>Profit (before ads):</b> $${profit}</p>
 <p><b>Hours per week:</b> ${weeklyHours}</p>
-<p><b>Effective hourly income:</b> $${hourly.toFixed(2)}</p>
+<p><b>Effective hourly:</b> $${hourly.toFixed(2)}</p>
 <p><b>Customers:</b> ${customers}</p>
 <p><b>Price:</b> $${price}</p>
-<p><b>Marketing spend:</b> $${marketing}</p>
-`;
 
-if(hourly < 10){
-  html += `<p style="color:#ffa940">You are earning less than minimum wage.</p>`;
-}
-
-if(growth <= 0){
-  html += `<p style="color:#ff4d4f">Your revenue is not growing.</p>`;
-}
-
-html += `
 <hr>
-<p>This verdict is based only on the numbers you gave.</p>
-<p>If you don't trust them — that's already the problem.</p>
+<p style="opacity:.7">
+This is not motivation.<br>
+This is what your own numbers are saying.
+</p>
 
-<button onclick="location.href='gate.html'">Start tracking my reality</button>
+<button onclick="localStorage.removeItem('realityCheck');location.href='index.html'">
+Run it again
+</button>
 `;
 
 document.getElementById("report").innerHTML = html;
