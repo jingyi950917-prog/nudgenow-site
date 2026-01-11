@@ -22,23 +22,29 @@ let answers = [];
 function show() {
   document.getElementById("question").innerText = questions[current];
   document.getElementById("answer").value = "";
-  document.getElementById("progress").innerText = 
+  document.getElementById("progress").innerText =
     `Question ${current + 1} of ${questions.length}`;
 }
 
 function next() {
   const val = document.getElementById("answer").value;
-  answers.push(val);
+
+  answers.push({
+    q: questions[current],
+    a: val
+  });
+
   current++;
 
   if (current >= questions.length) {
     localStorage.setItem("realityCheck", JSON.stringify(answers));
-    window.location.href = "verdict.html";
+    window.location.href = "verdict.com";
   } else {
     show();
   }
 }
 
 show();
+
 
  
