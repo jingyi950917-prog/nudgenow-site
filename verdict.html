@@ -39,44 +39,50 @@ button{
 <script>
 const data = JSON.parse(localStorage.getItem("realityCheck") || "[]");
 
-const revenueNow = Number(data[2]||0);
-const revenueBefore = Number(data[3]||0);
-const weeklyHours = Number(data[0]||0);
-const marketing = Number(data[8]||0);
-const customers = Number(data[6]||0);
-const price = Number(data[4]||0);
+function get(q){
+  return data.find(x => x.q === q)?.a || 0;
+}
+
+const revenueNow = Number(get("What is your current monthly revenue? (USD)"));
+const revenueBefore = Number(get("What was your revenue 30 days ago? (USD)"));
+const weeklyHours = Number(get("How many hours per week do you spend on this business?"));
+const marketing = Number(get("How much have you spent on marketing? (USD)"));
+const customers = Number(get("How many paying customers do you have now?"));
+const price = Number(get("How much would a typical customer pay? (USD)"));
 
 let growth = revenueNow - revenueBefore;
 let hourly = weeklyHours>0 ? revenueNow/(weeklyHours*4) : 0;
-let burn = marketing - revenueNow;
 
 let html = "";
 
 if(revenueNow < marketing){
-  html += `<h2 class="bad">🔴 You are bleeding</h2>
+  html += `<h2 style="color:#ff4d4f">🔴 You are bleeding</h2>
   <p>You spend more than you make.</p>`;
 }else{
-  html += `<h2 class="good">🟢 You are not bleeding</h2>`;
+  html += `<h2 style="color:#52c41a">🟢 You are not bleeding</h2>`;
 }
 
-html += `<hr>
+html += `
+<hr>
 <p><b>Revenue (30 days):</b> $${revenueNow}</p>
 <p><b>Change:</b> $${growth}</p>
 <p><b>Hours per week:</b> ${weeklyHours}</p>
 <p><b>Effective hourly income:</b> $${hourly.toFixed(2)}</p>
 <p><b>Customers:</b> ${customers}</p>
 <p><b>Price:</b> $${price}</p>
-<p><b>Marketing spend:</b> $${marketing}</p>`;
+<p><b>Marketing spend:</b> $${marketing}</p>
+`;
 
 if(hourly < 10){
-  html += `<p class="warn">You are earning less than minimum wage.</p>`;
+  html += `<p style="color:#ffa940">You are earning less than minimum wage.</p>`;
 }
 
 if(growth <= 0){
-  html += `<p class="bad">Your revenue is not growing.</p>`;
+  html += `<p style="color:#ff4d4f">Your revenue is not growing.</p>`;
 }
 
-html += `<hr>
+html += `
+<hr>
 <p>This verdict is based only on the numbers you gave.</p>
 <p>If you don't trust them — that's already the problem.</p>
 
