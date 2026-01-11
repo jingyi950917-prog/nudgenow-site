@@ -1,83 +1,89 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Your Reality Check</title>
-<link rel="stylesheet" href="style.css">
+<title>Reality Check</title>
+<style>
+body {
+  background:#0b1020;
+  color:#fff;
+  font-family:system-ui;
+  padding:40px;
+}
+.card{
+  background:#111;
+  border-radius:12px;
+  padding:24px;
+  max-width:480px;
+  margin:auto;
+}
+.bad{color:#ff4d4f}
+.warn{color:#ffa940}
+.good{color:#52c41a}
+hr{border:0;border-top:1px solid #222;margin:16px 0}
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:8px;
+  background:#ff4d4f;
+  color:white;
+  font-size:16px;
+}
+</style>
 </head>
-<body class="center">
-<div class="card" id="card"></div>
+
+<body>
+<div class="card" id="report"></div>
 
 <script>
-const data = JSON.parse(localStorage.getItem("realityCheck")) || [];
+const data = JSON.parse(localStorage.getItem("realityCheck") || "[]");
 
-// Count unknowns
-let unknown = 0;
-data.forEach(v => {
-  if (!v || v.toLowerCase().includes("don")) unknown++;
-});
+const revenueNow = Number(data[2]||0);
+const revenueBefore = Number(data[3]||0);
+const weeklyHours = Number(data[0]||0);
+const marketing = Number(data[8]||0);
+const customers = Number(data[6]||0);
+const price = Number(data[4]||0);
 
-const fixed = Number(data[1]) || 0;
-const variable = Number(data[2]) || 0;
-const now = Number(data[5]) || 0;
-const before = Number(data[6]) || 0;
-const price = Number(data[7]) || 0;
-const market = Number(data[8]) || 0;
+let growth = revenueNow - revenueBefore;
+let hourly = weeklyHours>0 ? revenueNow/(weeklyHours*4) : 0;
+let burn = marketing - revenueNow;
 
-const burn = fixed + variable;
-const marketValue = price * market;
+let html = "";
 
-let status = "";
-let message = "";
-
-if (now < burn) {
-  status = "🟥 Bleeding";
-  message = "You are spending more than you make. This business is currently losing money.";
-} else if (now >= burn && now <= burn * 1.2) {
-  status = "🟨 Stuck";
-  message = "You are barely covering your costs. There is no safety margin.";
-} else {
-  status = "🟩 Viable";
-  message = "Your numbers show a real path to sustainability.";
+if(revenueNow < marketing){
+  html += `<h2 class="bad">🔴 You are bleeding</h2>
+  <p>You spend more than you make.</p>`;
+}else{
+  html += `<h2 class="good">🟢 You are not bleeding</h2>`;
 }
 
-if (now <= before) {
-  message += "<br><br>Revenue is not growing.";
+html += `<hr>
+<p><b>Revenue (30 days):</b> $${revenueNow}</p>
+<p><b>Change:</b> $${growth}</p>
+<p><b>Hours per week:</b> ${weeklyHours}</p>
+<p><b>Effective hourly income:</b> $${hourly.toFixed(2)}</p>
+<p><b>Customers:</b> ${customers}</p>
+<p><b>Price:</b> $${price}</p>
+<p><b>Marketing spend:</b> $${marketing}</p>`;
+
+if(hourly < 10){
+  html += `<p class="warn">You are earning less than minimum wage.</p>`;
 }
 
-if (marketValue < burn * 12) {
-  message += "<br><br>Your market may be too small to support this business.";
+if(growth <= 0){
+  html += `<p class="bad">Your revenue is not growing.</p>`;
 }
 
-let realityBlock = "";
+html += `<hr>
+<p>This verdict is based only on the numbers you gave.</p>
+<p>If you don't trust them — that's already the problem.</p>
 
-if (unknown >= 3) {
-  realityBlock = `
-    <hr>
-    <h3>⚠️ You do not have real numbers</h3>
-    <p>
-      You answered “I don’t know” to multiple critical questions.
-      This means you are not running a business — you are guessing.
-    </p>
-    <p>
-      If you want a real verdict, you need to collect real data for 14–30 days.
-    </p>
-    <a class="button" href="https://YOURDOMAIN.com/tracker">Start Tracking Reality</a>
-    <p class="small">
-      After tracking, come back and run this check again.
-    </p>
-  `;
-}
-
-document.getElementById("card").innerHTML = `
-  <h2>${status}</h2>
-  <p>${message}</p>
-  ${realityBlock}
-  <p class="small">
-    This verdict is based only on the numbers you provided.
-  </p>
+<button onclick="location.href='gate.html'">Start tracking my reality</button>
 `;
-</script>
 
+document.getElementById("report").innerHTML = html;
+</script>
 </body>
 </html>
