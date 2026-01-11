@@ -33,7 +33,7 @@ function next() {
 
   if (current >= questions.length) {
     localStorage.setItem("realityCheck", JSON.stringify(answers));
-    window.location.href = "index.html";
+    window.location.href = "verdict.html";
   } else {
     show();
   }
