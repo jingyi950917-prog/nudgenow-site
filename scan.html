@@ -95,11 +95,68 @@ header p{color:#d1d5db;margin-top:12px;}
   max-width:100%;
 }
 
-footer{
-  background:#000;
-  color:#fff;
-  text-align:center;
-  padding:60px 20px;
+.peos-contact {
+  background: #000;
+  color: #fff;
+  padding: 80px 20px 40px;
+}
+
+.peos-contact-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.qr-wrap {
+  margin-bottom: 40px;
+}
+
+.qr {
+  width: 240px;
+  max-width: 80vw;
+  border-radius: 16px;
+  box-shadow: 0 0 40px rgba(255,255,255,0.05);
+}
+
+.qr-label {
+  margin-top: 12px;
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+.contact-info {
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.contact-info .line {
+  margin-bottom: 12px;
+}
+
+.contact-info strong {
+  display: inline-block;
+  min-width: 80px;
+  color: #aaa;
+}
+
+.cn-hint {
+  margin-top: 24px;
+  font-size: 15px;
+}
+
+.en-hint {
+  margin-top: 6px;
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+.footer-brand {
+  margin-top: 60px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  font-size: 14px;
+  text-align: center;
+  opacity: 0.5;
 }
 
 @media(max-width:768px){
@@ -122,11 +179,6 @@ footer{
 </header>
 
 <div class="container">
-
-<div class="card">
-<p data-cn="你正在为自己安装一套个人企业操作系统"
-   data-en="You are installing a Personal Enterprise Operating System for yourself."></p>
-</div>
 
 <div class="card">
 <h2>Personal</h2>
@@ -174,9 +226,40 @@ footer{
 
 </div>
 
-<footer>
-<p>NudgeNow · Reality-as-a-Service</p>
-</footer>
+<!-- PEOS Contact Footer -->
+<section class="peos-contact">
+  <div class="peos-contact-inner">
+
+    <div class="qr-wrap">
+      <img src="assets/whatsapp-qr.png.jpg" alt="WhatsApp QR" class="qr">
+      <div class="qr-label">WhatsApp</div>
+    </div>
+
+    <div class="contact-info">
+      <div class="line">
+        <strong>Phone</strong>  
+        <span>+86 130 606 333 91</span>
+      </div>
+
+      <div class="line">
+        <strong>Location</strong>  
+        <span>347 Madison Ave, New York, NY, USA</span>
+      </div>
+
+      <div class="cn-hint">
+        扫码或致电，开始你的 PEOS 安装流程
+      </div>
+      <div class="en-hint">
+        Scan or call to begin your PEOS installation
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-brand">
+    NudgeNow · Reality-as-a-Service
+  </div>
+</section>
 
 <script>
 function setLang(lang){
