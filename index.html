@@ -143,6 +143,55 @@ footer {
     max-width: 360px;
   }
 }
+  /* ===== NudgeNow mobile rescue ===== */
+@media (max-width: 768px) {
+
+  /* 1️⃣ 解除“中间一条”的 1000px 牢笼 */
+  .section {
+    max-width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 32px;
+    margin: 48px auto;
+  }
+
+  /* 2️⃣ 所有图片在手机上都不准溢出中轴 */
+  .section img,
+  .cta img {
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+    display: block;
+  }
+
+  /* 3️⃣ Hero 区从“PPT”变成“产品页” */
+  header {
+    text-align: left;
+    padding: 48px 20px;
+  }
+
+  h1 {
+    font-size: 36px;
+    line-height: 1.15;
+  }
+
+  /* 4️⃣ 卡片不要像漂浮气泡一样挤在中间 */
+  .card {
+    padding: 24px;
+    border-radius: 20px;
+  }
+
+  /* 5️⃣ CTA 按钮区拉满宽度，像真正的行动按钮 */
+  .cta {
+    padding: 64px 20px;
+    text-align: center;
+  }
+
+  .cta button {
+    width: 100%;
+    max-width: 360px;
+  }
+}
 </style>
 </head>
 
