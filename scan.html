@@ -102,58 +102,43 @@ header p{color:#d1d5db;margin-top:12px;}
   margin: 0 auto;
   text-align: center;
 }
-
-.site-footer {
-  background: #000;
-  color: white;
-  padding-top: 100px;
-  padding-bottom: 50px;
-  text-align: center;
-}
-  
-
-.footer-inner {
-  max-width: 100%;
-  margin: 0 auto;
+.site-footer{
+  background:#000;
+  color:#fff;
+  padding:64px 20px;   /* 和 header 一模一样 */
+  text-align:center;
 }
 
-.footer-qr {
-  width: 260px;
-  max-width: 80vw;
-  margin-bottom: 24px;
+.footer-inner{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
 }
 
-.footer-label {
-  opacity: 0.6;
-  margin-bottom: 40px;
+.footer-qr{
+  width:160px;        /* 不再巨大 */
+  max-width:60vw;
+  margin-bottom:12px;
 }
 
-.footer-info {
-  font-size: 16px;
-  line-height: 2;
+.footer-title{
+  font-size:16px;
+  opacity:0.9;
 }
 
-.footer-info span {
-  color: #888;
-  margin-right: 8px;
+.footer-line{
+  font-size:14px;
+  display:flex;
+  gap:10px;
+  opacity:0.85;
 }
 
-.footer-hint {
-  margin-top: 30px;
-  font-size: 14px;
-  opacity: 0.9;
-}
-
-.footer-hint small {
-  opacity: 0.6;
-}
-
-.footer-brand {
-  margin-top: 80px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(255,255,255,0.12);
-  font-size: 13px;
-  opacity: 0.5;
+.footer-cn{
+  margin-top:12px;
+  font-size:13px;
+  opacity:0.6;
 }
 
 @media(max-width:768px){
@@ -206,29 +191,27 @@ header p{color:#d1d5db;margin-top:12px;}
 </div>
 
 <footer class="site-footer">
-
   <div class="footer-inner">
 
-    <img src="assets/whatsapp-qr.png.jpg" class="footer-qr">
+    <img src="assets/whatsapp.png.jpg" alt="WhatsApp QR" class="footer-qr" />
 
-    <div class="footer-label">WhatsApp</div>
-
-    <div class="footer-info">
-      <div><span>Phone</span> +86 130 606 333 91</div>
-      <div><span>Location</span> 347 Madison Ave, New York, NY, USA</div>
+    <div class="footer-title">
+      WhatsApp
     </div>
 
-    <div class="footer-hint">
-      扫码或致电，开始你的 PEOS 安装流程<br>
-      <small>Scan or call to begin your PEOS installation</small>
+    <div class="footer-line">
+      <span>Phone</span> <span>+86 130 6063 3391</span>
+    </div>
+
+    <div class="footer-line">
+      <span>Location</span> <span>347 Madison Ave, New York, NY</span>
+    </div>
+
+    <div class="footer-cn">
+      微信 / WhatsApp 咨询
     </div>
 
   </div>
-
-  <div class="footer-brand">
-    NudgeNow · Reality-as-a-Service
-  </div>
-
 </footer>
 
 <script>
