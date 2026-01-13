@@ -6,6 +6,13 @@
 <title>PEOS — Personal Enterprise Operating System</title>
 
 <style>
+html, body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+  
 :root{
   --bg:#f6f8fb;
   --card:#ffffff;
@@ -102,43 +109,59 @@ header p{color:#d1d5db;margin-top:12px;}
   margin: 0 auto;
   text-align: center;
 }
+
 .site-footer{
+  width:100vw;
+  margin-left:calc(-50vw + 50%);
   background:#000;
   color:#fff;
-  padding:64px 20px;   /* 和 header 一模一样 */
+  padding:96px 20px 80px;
   text-align:center;
 }
 
 .footer-inner{
-  width:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:12px;
+  max-width:520px;
+  margin:0 auto;
 }
 
 .footer-qr{
-  width:160px;        /* 不再巨大 */
+  width:150px;
   max-width:60vw;
-  margin-bottom:12px;
+  margin:0 auto 36px;
+  display:block;
 }
 
-.footer-title{
-  font-size:16px;
-  opacity:0.9;
+.footer-brand{
+  font-size:28px;
+  font-weight:700;
+  letter-spacing:-0.02em;
 }
 
-.footer-line{
+.footer-tagline{
   font-size:14px;
-  display:flex;
-  gap:10px;
-  opacity:0.85;
+  opacity:0.7;
+  margin-top:6px;
+}
+
+.footer-info{
+  margin-top:36px;
+  font-size:14px;
+  opacity:0.9;
+  line-height:1.8;
+}
+
+.footer-divider{
+  width:40px;
+  height:2px;
+  background:#fff;
+  margin:40px auto;
+  opacity:0.2;
 }
 
 .footer-cn{
-  margin-top:12px;
   font-size:13px;
-  opacity:0.6;
+  opacity:0.55;
+  line-height:1.6;
 }
 
 @media(max-width:768px){
@@ -193,27 +216,24 @@ header p{color:#d1d5db;margin-top:12px;}
 <footer class="site-footer">
   <div class="footer-inner">
 
-    <img src="assets/whatsapp.png.jpg" alt="WhatsApp QR" class="footer-qr" />
+    <img src="/assets/whatsapp-qr.png.jpg" class="footer-qr">
 
-    <div class="footer-title">
-      WhatsApp
+    <div class="footer-brand">NudgeNow</div>
+    <div class="footer-tagline">Reality-as-a-Service</div>
+
+    <div class="footer-info">
+      <div>WhatsApp&nbsp;&nbsp; +86 130 6063 3391</div>
+      <div>New York&nbsp;&nbsp; 347 Madison Ave</div>
     </div>
 
-    <div class="footer-line">
-      <span>Phone</span> <span>+86 130 6063 3391</span>
-    </div>
-
-    <div class="footer-line">
-      <span>Location</span> <span>347 Madison Ave, New York, NY</span>
-    </div>
+    <div class="footer-divider"></div>
 
     <div class="footer-cn">
-      微信 / WhatsApp 咨询
+      通过真实数据与行为模型，帮你判断生意是否真的在赚钱
     </div>
 
   </div>
 </footer>
-
 <script>
 function setLang(lang){
   document.querySelectorAll("[data-cn]").forEach(el=>{
