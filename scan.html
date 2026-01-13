@@ -1,278 +1,184 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>PEOS – Personal Enterprise Operating System</title>
+<title>PEOS — Personal Enterprise Operating System</title>
 
 <style>
+:root{
+  --bg:#f6f8fb;
+  --card:#ffffff;
+  --text:#0b0b0b;
+  --muted:#6b7280;
+  --line:#e5e7eb;
+}
+
 *{
   box-sizing:border-box;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
 }
+
 body{
   margin:0;
-  background:#f6f7f9;
-  color:#111;
+  background:var(--bg);
+  color:var(--text);
 }
-.banner{
-  background:linear-gradient(135deg,#000,#222);
-  color:white;
-  padding:60px 24px;
+
+header{
+  background:#000;
+  color:#fff;
+  padding:64px 20px;
   text-align:center;
 }
-.banner h1{
-  margin:0;
-  font-size:32px;
+
+header h1{margin:0;font-size:36px;}
+header p{color:#d1d5db;margin-top:12px;}
+
+.lang-switch{
+  position:absolute;
+  top:20px;
+  right:20px;
+  background:#fff;
+  border-radius:30px;
+  padding:6px;
+  display:flex;
+  gap:6px;
 }
-.banner p{
-  opacity:.85;
-  margin-top:12px;
-  font-size:16px;
+
+.lang-switch button{
+  border:none;
+  background:none;
+  padding:8px 14px;
+  border-radius:20px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.lang-switch button.active{
+  background:#000;
+  color:#fff;
 }
 
 .container{
   max-width:900px;
-  margin:auto;
-  padding:40px 20px;
-  display:flex;
-  flex-direction:column;
-  gap:48px;
+  margin:0 auto;
+  padding:60px 20px;
 }
 
-.section{
-  background:white;
-  border-radius:12px;
-  padding:32px 28px;
-  box-shadow:0 10px 30px rgba(0,0,0,.05);
+.card{
+  background:#fff;
+  border-radius:16px;
+  padding:48px;
+  margin-bottom:40px;
+  box-shadow:0 10px 40px rgba(0,0,0,.05);
 }
 
-.section h2{
-  margin-top:0;
-  font-size:22px;
-}
-.section h3{
-  margin-bottom:8px;
-  font-size:18px;
-}
-
-.text{
-  white-space:pre-line;
-  line-height:1.7;
-  font-size:15px;
-  color:#222;
-}
+.muted{color:#6b7280;}
 
 .grid{
   display:flex;
-  flex-wrap:wrap;
-  gap:20px;
-}
-.card{
-  flex:1 1 260px;
-  background:#f1f3f6;
-  border-radius:10px;
-  padding:20px;
+  gap:40px;
 }
 
-.contact{
-  display:flex;
-  flex-wrap:wrap;
-  gap:30px;
-  align-items:center;
-  justify-content:space-between;
-}
-.qr{
-  width:160px;
-  height:160px;
-  background:#ddd;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#666;
-  border-radius:12px;
-  font-size:14px;
+.qr img{
+  width:220px;
+  max-width:100%;
 }
 
-.footer{
+footer{
   background:#000;
-  color:white;
+  color:#fff;
   text-align:center;
-  padding:40px 20px;
-  font-size:14px;
-  opacity:.85;
+  padding:60px 20px;
 }
 
-@media(max-width:700px){
-  .banner h1{font-size:26px;}
-  .section{padding:24px 18px;}
+@media(max-width:768px){
+  .grid{flex-direction:column;}
+  .card{padding:28px;}
 }
 </style>
 </head>
 
 <body>
 
-<div class="banner">
-  <h1>PEOS — Personal Enterprise Operating System</h1>
-  <p>你正在为自己安装一套 个人企业操作系统</p>
+<div class="lang-switch">
+  <button id="btn-cn" class="active" onclick="setLang('cn')">中文</button>
+  <button id="btn-en" onclick="setLang('en')">EN</button>
 </div>
+
+<header>
+  <h1>PEOS</h1>
+  <p data-cn="个人企业操作系统" data-en="Personal Enterprise Operating System"></p>
+</header>
 
 <div class="container">
 
-<div class="section">
-<div class="text">
-你正在为自己安装一套 个人企业操作系统
-
-PEOS — Personal Enterprise Operating System
-</div>
+<div class="card">
+<p data-cn="你正在为自己安装一套个人企业操作系统"
+   data-en="You are installing a Personal Enterprise Operating System for yourself."></p>
 </div>
 
-<div class="section">
-<div class="text">
-Personal
+<div class="card">
+<h2>Personal</h2>
+<p data-cn="这不是给公司的系统，是给一个真实的人用的：个体户、老板、自由职业者、正在撑生意的人。"
+   data-en="This is not for corporations. It is built for a real human being: the owner, the solo founder, the person holding a business together."></p>
 
-这不是给公司的系统，
-是给一个真实的人用的：
-个体户、老板、自由职业者、正在撑生意的人。
-</div>
-</div>
+<h2>Enterprise</h2>
+<p data-cn="你不是在记账，你在经营一个必须活下去并持续赚钱的商业体。"
+   data-en="You are not bookkeeping. You are running something that must survive and generate cash."></p>
 
-<div class="section">
-<div class="text">
-Enterprise
+<h2>Operating</h2>
+<p data-cn="你看到的不是报表，而是你的生意每天如何运转。"
+   data-en="You are not seeing reports. You are seeing how your business actually operates."></p>
 
-你不是在“记账”，
-你在经营一个必须活下去并持续赚钱的商业体。
-
-你现在的生意，
-每天都在消耗现金、时间、情绪。
-PEOS 只关心一件事：
-它有没有产生真实回报。
-</div>
+<h2>System</h2>
+<p data-cn="它把感觉变成事实，把焦虑变成可计算的现实。"
+   data-en="It turns feelings into facts and anxiety into something measurable."></p>
 </div>
 
-<div class="section">
-<div class="text">
-Operating
-
-你看到的不是报表，
-而是你的生意每天在怎么运转：
-
-钱是怎么流进来的
-成本是怎么被吃掉的
-你离回本是更近了，还是更远了
-</div>
+<div class="card">
+<h3 data-cn="PEOS 将为你建立：" data-en="PEOS will build for you:"></h3>
+<ul>
+<li data-cn="专属ERP系统" data-en="A personal ERP system"></li>
+<li data-cn="经营仪表盘" data-en="A business dashboard"></li>
+<li data-cn="美式商学院课程" data-en="An American-style business education"></li>
+<li data-cn="真正被理解的经营数据" data-en="Business data that is actually understood"></li>
+</ul>
 </div>
 
-<div class="section">
-<div class="text">
-System
-
-这不是一个工具。
-这是你做生意的底层结构：
-
-你输入什么数据
-系统如何计算
-你该如何判断
-你下一步该怎么走
-
-它把感觉变成事实，
-把焦虑变成可计算的现实。
-</div>
-</div>
-
-<div class="section">
-<div class="text">
-你即将得到的不是“建议”
-
-而是你自己的商业真实状态
-</div>
-</div>
-
-<div class="section">
-<div class="text">
-接下来，
-PEOS 会开始为你建立：
-
-PEOS 将为你建立一套
-
-真正属于你的经营系统
-
-你不是在购买一个软件，
-你是在为自己的生意，安装一套可以长期使用的底层结构。
-</div>
-</div>
-
-<div class="section">
+<div class="card">
 <div class="grid">
-
-<div class="card text">
-1. 专属 ERP 系统
-
-一套为个体经营者设计的ERP系统
+<div class="qr">
+<img src="whatsapp-qr.png.jpg">
+<p class="muted">WhatsApp</p>
 </div>
 
-<div class="card text">
-2. 经营仪表盘
-
-你会看到三组你从未真正看清过的数字：
-
-你的现金是在变多，还是在变少  
-你的成本是否被收入覆盖  
-你距离回本与安全线还有多远  
-
-不是预测，  
-是你自己的实时状态。
+<div>
+<p><b>Phone:</b> +1 130 606 333 91</p>
+<p><b>Location:</b> 347 Madison Ave, New York, NY, USA</p>
+<p class="muted" data-cn="扫码或致电，开始你的 PEOS 安装流程"
+   data-en="Scan or call to start installing your PEOS."></p>
 </div>
-
-<div class="card text">
-3. 美式商学院课程  
-
-《经营的语言：个体户的管理学与行为经济学》
-
-管理学原理  
-会计与现金（赚钱 ≠ 有钱）  
-成本与收益结构  
-财务决策与资本视角  
-行为经济学与决策偏差  
-现实对账与商业语言
-</div>
-
-<div class="card text">
-4. 你的经营数据，会被真正理解  
-
-不是被简单地加总，  
-而是被放进一套可以解释现实的模型里。
-
-你会第一次知道：
-
-为什么你这么忙却没钱  
-哪些数字在拖你后腿  
-哪些地方，其实是可以被拧回来的  
-
-让你重新掌握你自己的生意。
-</div>
-
-</div>
-</div>
-
-<div class="section">
-<h2>开始安装你的 PEOS</h2>
-<div class="contact">
-  <div class="qr">QR Code Here</div>
-  <div class="text">
-📱 手机号： [YOUR PHONE NUMBER]<br/>
-📍 地址： [YOUR ADDRESS]
-  </div>
 </div>
 </div>
 
 </div>
 
-<div class="footer">
-© NudgeNow — Reality-as-a-Service  
-<br/>PEOS · Personal Enterprise Operating System
-</div>
+<footer>
+<p>NudgeNow · Reality-as-a-Service</p>
+</footer>
+
+<script>
+function setLang(lang){
+  document.querySelectorAll("[data-cn]").forEach(el=>{
+    el.innerText = el.dataset[lang];
+  });
+  document.getElementById("btn-cn").classList.toggle("active",lang==="cn");
+  document.getElementById("btn-en").classList.toggle("active",lang==="en");
+}
+setLang("cn");
+</script>
 
 </body>
 </html>
