@@ -90,10 +90,6 @@ header p{color:#d1d5db;margin-top:12px;}
   gap:40px;
 }
 
-.qr img{
-  width:220px;
-  max-width:100%;
-}
 
 .peos-contact {
   background: #000;
@@ -107,55 +103,55 @@ header p{color:#d1d5db;margin-top:12px;}
   text-align: center;
 }
 
-.qr-wrap {
+.site-footer {
+  background: #000;
+  color: white;
+  padding-top: 100px;
+  padding-bottom: 50px;
+  text-align: center;
+}
+
+.footer-inner {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.footer-qr {
+  width: 260px;
+  max-width: 80vw;
+  margin-bottom: 24px;
+}
+
+.footer-label {
+  opacity: 0.6;
   margin-bottom: 40px;
 }
 
-.qr {
-  width: 240px;
-  max-width: 80vw;
-  border-radius: 16px;
-  box-shadow: 0 0 40px rgba(255,255,255,0.05);
-}
-
-.qr-label {
-  margin-top: 12px;
-  font-size: 14px;
-  opacity: 0.6;
-}
-
-.contact-info {
+.footer-info {
   font-size: 16px;
-  line-height: 1.8;
+  line-height: 2;
 }
 
-.contact-info .line {
-  margin-bottom: 12px;
+.footer-info span {
+  color: #888;
+  margin-right: 8px;
 }
 
-.contact-info strong {
-  display: inline-block;
-  min-width: 80px;
-  color: #aaa;
+.footer-hint {
+  margin-top: 30px;
+  font-size: 14px;
+  opacity: 0.9;
 }
 
-.cn-hint {
-  margin-top: 24px;
-  font-size: 15px;
-}
-
-.en-hint {
-  margin-top: 6px;
-  font-size: 13px;
+.footer-hint small {
   opacity: 0.6;
 }
 
 .footer-brand {
-  margin-top: 60px;
+  margin-top: 80px;
   padding-top: 20px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  font-size: 14px;
-  text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  font-size: 13px;
   opacity: 0.5;
 }
 
@@ -208,32 +204,22 @@ header p{color:#d1d5db;margin-top:12px;}
 </ul>
 </div>
 
-<!-- PEOS Contact Footer -->
-<section class="peos-contact">
-  <div class="peos-contact-inner">
+<footer class="site-footer">
 
-    <div class="qr-wrap">
-      <img src="assets/whatsapp-qr.png.jpg" alt="WhatsApp QR" class="qr">
-      <div class="qr-label">WhatsApp</div>
+  <div class="footer-inner">
+
+    <img src="assets/whatsapp-qr.png.jpg" class="footer-qr">
+
+    <div class="footer-label">WhatsApp</div>
+
+    <div class="footer-info">
+      <div><span>Phone</span> +86 130 606 333 91</div>
+      <div><span>Location</span> 347 Madison Ave, New York, NY, USA</div>
     </div>
 
-    <div class="contact-info">
-      <div class="line">
-        <strong>Phone</strong>  
-        <span>+86 130 606 333 91</span>
-      </div>
-
-      <div class="line">
-        <strong>Location</strong>  
-        <span>347 Madison Ave, New York, NY, USA</span>
-      </div>
-
-      <div class="cn-hint">
-        扫码或致电，开始你的 PEOS 安装流程
-      </div>
-      <div class="en-hint">
-        Scan or call to begin your PEOS installation
-      </div>
+    <div class="footer-hint">
+      扫码或致电，开始你的 PEOS 安装流程<br>
+      <small>Scan or call to begin your PEOS installation</small>
     </div>
 
   </div>
@@ -241,7 +227,8 @@ header p{color:#d1d5db;margin-top:12px;}
   <div class="footer-brand">
     NudgeNow · Reality-as-a-Service
   </div>
-</section>
+
+</footer>
 
 <script>
 function setLang(lang){
