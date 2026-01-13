@@ -6,19 +6,27 @@
 <title>PEOS — Personal Enterprise Operating System</title>
 
 <style>
+/* === SAFARI GLOBAL FIX === */
 html, body {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
+  width:100%;
+  max-width:100%;
+  margin:0;
+  padding:0;
+  overflow-x:hidden;
 }
-  
+
+body > * {
+  max-width:100vw;
+  overflow-x:hidden;
+}
+
+/* ====================== */
+
 :root{
   --bg:#f6f8fb;
   --card:#ffffff;
   --text:#0b0b0b;
   --muted:#6b7280;
-  --line:#e5e7eb;
 }
 
 *{
@@ -27,20 +35,13 @@ html, body {
 }
 
 body{
-  margin:0;
   background:var(--bg);
   color:var(--text);
-}
-
-  body{
   min-height:100vh;
   display:flex;
   flex-direction:column;
 }
 
-.container{
-  flex:1;
-}
 header{
   background:#000;
   color:#fff;
@@ -52,14 +53,16 @@ header h1{margin:0;font-size:36px;}
 header p{color:#d1d5db;margin-top:12px;}
 
 .lang-switch{
-  position:absolute;
+  position:fixed;
   top:20px;
   right:20px;
+  z-index:10;
   background:#fff;
   border-radius:30px;
   padding:6px;
   display:flex;
   gap:6px;
+  max-width:calc(100vw - 40px);
 }
 
 .lang-switch button{
@@ -77,6 +80,7 @@ header p{color:#d1d5db;margin-top:12px;}
 }
 
 .container{
+  flex:1;
   max-width:900px;
   margin:0 auto;
   padding:60px 20px;
@@ -90,25 +94,7 @@ header p{color:#d1d5db;margin-top:12px;}
   box-shadow:0 10px 40px rgba(0,0,0,.05);
 }
 
-.muted{color:#6b7280;}
-
-.grid{
-  display:flex;
-  gap:40px;
-}
-
-
-.peos-contact {
-  background: #000;
-  color: #fff;
-  padding: 80px 20px 40px;
-}
-
-.peos-contact-inner {
-  max-width: 720px;
-  margin: 0 auto;
-  text-align: center;
-}
+/* ========= FOOTER ========= */
 
 .site-footer{
   width:100%;
@@ -124,28 +110,27 @@ header p{color:#d1d5db;margin-top:12px;}
 }
 
 .footer-qr{
-  width:150px;
+  width:140px;
   max-width:60vw;
-  margin:0 auto 36px;
+  margin:0 auto 32px;
   display:block;
 }
 
 .footer-brand{
   font-size:28px;
   font-weight:700;
-  letter-spacing:-0.02em;
 }
 
 .footer-tagline{
   font-size:14px;
-  opacity:0.7;
+  opacity:.7;
   margin-top:6px;
 }
 
 .footer-info{
   margin-top:36px;
   font-size:14px;
-  opacity:0.9;
+  opacity:.9;
   line-height:1.8;
 }
 
@@ -154,17 +139,18 @@ header p{color:#d1d5db;margin-top:12px;}
   height:2px;
   background:#fff;
   margin:40px auto;
-  opacity:0.2;
+  opacity:.2;
 }
 
 .footer-cn{
   font-size:13px;
-  opacity:0.55;
+  opacity:.55;
   line-height:1.6;
 }
 
+/* ===== MOBILE ===== */
+
 @media(max-width:768px){
-  .grid{flex-direction:column;}
   .card{padding:28px;}
 }
 </style>
@@ -187,19 +173,19 @@ header p{color:#d1d5db;margin-top:12px;}
 <div class="card">
 <h2>Personal</h2>
 <p data-cn="这不是给公司的系统，是给一个真实的人用的：个体户、老板、自由职业者、正在撑生意的人。"
-   data-en="This is not for corporations. It is built for a real human being: the owner, the solo founder, the person holding a business together."></p>
+data-en="This is not for corporations. It is built for a real human being: the owner, the solo founder, the person holding a business together."></p>
 
 <h2>Enterprise</h2>
 <p data-cn="你不是在记账，你在经营一个必须活下去并持续赚钱的商业体。"
-   data-en="You are not bookkeeping. You are running something that must survive and generate cash."></p>
+data-en="You are not bookkeeping. You are running something that must survive and generate cash."></p>
 
 <h2>Operating</h2>
 <p data-cn="你看到的不是报表，而是你的生意每天如何运转。"
-   data-en="You are not seeing reports. You are seeing how your business actually operates."></p>
+data-en="You are not seeing reports. You are seeing how your business actually operates."></p>
 
 <h2>System</h2>
 <p data-cn="它把感觉变成事实，把焦虑变成可计算的现实。"
-   data-en="It turns feelings into facts and anxiety into something measurable."></p>
+data-en="It turns feelings into facts and anxiety into something measurable."></p>
 </div>
 
 <div class="card">
@@ -212,34 +198,31 @@ header p{color:#d1d5db;margin-top:12px;}
 </ul>
 </div>
 
+</div>
+
 <footer class="site-footer">
   <div class="footer-inner">
-
     <img src="/assets/whatsapp-qr.png.jpg" class="footer-qr">
-
     <div class="footer-brand">NudgeNow</div>
     <div class="footer-tagline">Reality-as-a-Service</div>
-
     <div class="footer-info">
-      <div>WhatsApp&nbsp;&nbsp; +86 130 6063 3391</div>
-      <div>New York&nbsp;&nbsp; 347 Madison Ave</div>
+      <div>WhatsApp  +86 130 6063 3391</div>
+      <div>New York  347 Madison Ave</div>
     </div>
-
     <div class="footer-divider"></div>
-
     <div class="footer-cn">
       通过真实数据与行为模型，帮你判断生意是否真的在赚钱
     </div>
-
   </div>
 </footer>
+
 <script>
 function setLang(lang){
   document.querySelectorAll("[data-cn]").forEach(el=>{
     el.innerText = el.dataset[lang];
   });
-  document.getElementById("btn-cn").classList.toggle("active",lang==="cn");
-  document.getElementById("btn-en").classList.toggle("active",lang==="en");
+  btnCn.classList.toggle("active",lang==="cn");
+  btnEn.classList.toggle("active",lang==="en");
 }
 setLang("cn");
 </script>
