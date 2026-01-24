@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEOS - Enterprise Health Diagnostic</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { --bg: #ffffff; --text: #000000; --accent: #3498db; --gray: #f5f5f5; }
+        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
+        
+        header { background: #000; color: #fff; padding: 40px 20px; text-align: center; position: relative; }
+        .logo { font-size: 32px; font-weight: 800; letter-spacing: 2px; }
+        
+        .lang-toggle { position: absolute; top: 20px; right: 20px; background: #fff; border-radius: 20px; padding: 2px; display: flex; cursor: pointer; border: 1px solid #000; }
+        .lang-opt { padding: 4px 12px; border-radius: 18px; font-size: 11px; font-weight: bold; color: #000; }
+        .active-lang { background: #000; color: #fff; }
+
+        .main-content { max-width: 850px; margin: -30px auto 40px; background: #fff; border-radius: 12px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); display: flex; flex-wrap: wrap; gap: 30px; }
+        
+        .input-section { flex: 1; min-width: 320px; }
+        .output-section { flex: 1; min-width: 320px; border-left: 1px solid #eee; padding-left: 20px; }
+        
+        .section { margin-bottom: 25px; }
+        h3 { font-size: 18px; border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 15px; }
+        
+        label { display: block; font-weight: 700; margin-bottom: 5px; font-size: 13px; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; box-sizing: border-box; margin-bottom: 10px; }
+        
+        button#diag-btn { width: 100%; padding: 15px; background: #000; color: #fff; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; }
+        
+        #result-area { display: none; }
+        .score-box { text-align: center; margin-bottom: 20px; padding: 20px; border-radius: 8px; }
+        .score-num { font-size: 42px; font-weight: 900; }
+        .feedback { font-size: 14px; line-height: 1.6; padding: 15px; border-radius: 6px; border: 1px solid #000; }
+
+        .danger { background: #fff5f5; color: #c53030; border-color: #feb2b2; }
+        .warning { background: #fffaf0; color: #dd6b20; border-color: #fbd38d; }
+        .success { background: #f0fff4; color: #2f855a; border-color: #9ae6b4; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="lang-toggle" onclick="toggleLang()">
+        <div id="lang-zh" class="lang-opt active-lang">中文</div>
+        <div id="lang-en" class="lang-opt">EN</div>
+    </div>
+    <div class="logo">PEOS</div>
+</header>
+
+<div class="main-content">
+    <div class="input-section">
+        <div class="section">
+            <h3 id="ui-h1">财务维度</h3>
+            <label id="ui-l-cash">账面现金额 (元)</label>
+            <input type="number" id="cash" value="30000">
+            <label id="ui-l-fixed">月均固定开支</label>
+            <input type="number" id="fixed_costs" value="15000">
+            <label id="ui-l-profit">平均月利润</label>
+            <input type="number" id="profit" value="5000">
+        </div>
+
+        <div class="section">
+            <h3 id="ui-h2">行为维度</h3>
+            <label id="ui-l-mixing">个人资金垫付次数</label>
+            <input type="number" id="mixing" value="0">
+        </div>
+
+        <div class="section">
+            <h3 id="ui-h3">管理维度</h3>
+            <label id="ui-l-inv">存货周转天数</label>
+            <input type="number" id="inv_days" value="30">
+            <label id="ui-l-ret">回头客比例 (0-100)</label>
+            <input type="number" id="retention" value="20">
+        </div>
+
+        <button id="diag-btn" onclick="diagnose()">立即执行深度诊断</button>
+    </div>
+
+    <div class="output-section">
+        <div id="result-area">
+            <div id="score-box" class="score-box">
+                <div style="font-size: 12px; text-transform: uppercase;" id="ui-score-label">Total Score</div>
+                <div class="score-num" id="scoreValue">0</div>
+                <div class="feedback" id="feedback"></div>
+            </div>
+            <canvas id="healthChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentLang = 'zh';
+    let healthChart;
+
+    const i18n = {
+        zh: {
+            h1: "1. 财务维度 (Finance)",
+            h2: "2. 行为维度 (Behavior)",
+            h3: "3. 管理维度 (Operating)",
+            l_cash: "账面现金额 (元)",
+            l_fixed: "月均固定开支 (租金/工资/水电)",
+            l_profit: "平均月利润 (元)",
+            l_mixing: "本月个人资金垫付次数",
+            l_inv: "存货周转天数 (天)",
+            l_ret: "回头客比例 (0-100)",
+            ph_cash: "当前可用现金",
+            ph_fixed: "每月雷打不动的支出",
+            ph_profit: "总收入 - 总成本",
+            ph_mixing: "公私不分是危险信号",
+            ph_inv: "货物积压多久能卖掉",
+            ph_ret: "老客户占比",
+            btn: "立即执行深度诊断",
+            score_label: "健康总分 / HEALTH SCORE",
+            chart_labels: ['财务', '行为', '管理'],
+            chart_title: '各项维度得分明细',
+            danger: "<b>诊断结果：高危。</b> 现金流难以支撑半年以上，且存在严重的公私款混用。建议：立即裁撤亏损业务，停止个人垫资。",
+            warning: "<b>诊断结果：亚健康。</b> 盈利能力或运营效率存在短板。建议：优化周转率，建立严格的财务隔离制度。",
+            success: "<b>诊断结果：健康。</b> 系统运行逻辑清晰，具备较强的抗风险能力。建议：可以考虑标准化流程并进行小规模复制。"
+        },
+        en: {
+            h1: "1. Financial Dimension",
+            h2: "2. Behavioral Dimension",
+            h3: "3. Management Dimension",
+            l_cash: "Cash Balance ($)",
+            l_fixed: "Monthly Fixed Costs",
+            l_profit: "Monthly Net Profit",
+            l_mixing: "Personal Fund Injections",
+            l_inv: "Inventory Days",
+            l_ret: "Retention Rate (0-100)",
+            ph_cash: "Available liquid cash",
+            ph_fixed: "Total monthly fixed expenses",
+            ph_profit: "Revenue minus all costs",
+            ph_mixing: "Mixing personal/biz funds is a risk",
+            ph_inv: "Average days to sell stock",
+            ph_ret: "Repeat customer percentage",
+            btn: "RUN DEEP DIAGNOSIS",
+            score_label: "HEALTH SCORE",
+            chart_labels: ['Finance', 'Behavior', 'Operating'],
+            chart_title: 'Dimension Breakdown',
+            danger: "<b>CRITICAL RISK.</b> Runway is less than 6 months with high behavioral bias. Action: Cut loss-making units and stop personal injections.",
+            warning: "<b>SUB-HEALTHY.</b> Weakness in profitability or efficiency. Action: Improve turnover and enforce financial boundaries.",
+            success: "<b>HEALTHY.</b> Clear logic and strong resilience. Action: Consider standardizing and scaling your operation."
+        }
+    };
+
+    function toggleLang() {
+        currentLang = currentLang === 'zh' ? 'en' : 'zh';
+        document.getElementById('lang-zh').classList.toggle('active-lang');
+        document.getElementById('lang-en').classList.toggle('active-lang');
+        updateUI();
+        if(document.getElementById('result-area').style.display === 'block') diagnose();
+    }
+
+    function updateUI() {
+        const t = i18n[currentLang];
+        document.getElementById('ui-h1').innerText = t.h1;
+        document.getElementById('ui-h2').innerText = t.h2;
+        document.getElementById('ui-h3').innerText = t.h3;
+        document.getElementById('ui-l-cash').innerText = t.l_cash;
+        document.getElementById('ui-l-fixed').innerText = t.l_fixed;
+        document.getElementById('ui-l-profit').innerText = t.l_profit;
+        document.getElementById('ui-l-mixing').innerText = t.l_mixing;
+        document.getElementById('ui-l-inv').innerText = t.l_inv;
+        document.getElementById('ui-l-ret').innerText = t.l_ret;
+        document.getElementById('diag-btn').innerText = t.btn;
+        document.getElementById('ui-score-label').innerText = t.score_label;
+        
+        document.getElementById('cash').placeholder = t.ph_cash;
+        document.getElementById('fixed_costs').placeholder = t.ph_fixed;
+        document.getElementById('profit').placeholder = t.ph_profit;
+        document.getElementById('mixing').placeholder = t.ph_mixing;
+        document.getElementById('inv_days').placeholder = t.ph_inv;
+        document.getElementById('retention').placeholder = t.ph_ret;
+    }
+
+    function diagnose() {
+        const cash = parseFloat(document.getElementById('cash').value) || 0;
+        const fixed = parseFloat(document.getElementById('fixed_costs').value) || 1;
+        const mixing = parseInt(document.getElementById('mixing').value) || 0;
+        const invDays = parseInt(document.getElementById('inv_days').value) || 0;
+        const retention = parseInt(document.getElementById('retention').value) || 0;
+
+        let fScore = Math.min((cash / fixed) / 6, 1) * 40;
+        let bScore = Math.max(0, 30 - (mixing * 10));
+        let mScore = ((retention / 100) * 15) + Math.max(0, 15 - (Math.max(0, invDays - 30) * 0.5));
+        const totalScore = fScore + bScore + mScore;
+
+        const resultArea = document.getElementById('result-area');
+        const scoreBox = document.getElementById('score-box');
+        const feedback = document.getElementById('feedback');
+        const t = i18n[currentLang];
+
+        resultArea.style.display = 'block';
+        document.getElementById('scoreValue').innerText = totalScore.toFixed(1);
+
+        // 清除旧样式
+        scoreBox.className = 'score-box';
+        if (totalScore < 45) {
+            scoreBox.classList.add('danger');
+            feedback.innerHTML = t.danger;
+        } else if (totalScore < 75) {
+            scoreBox.classList.add('warning');
+            feedback.innerHTML = t.warning;
+        } else {
+            scoreBox.classList.add('success');
+            feedback.innerHTML = t.success;
+        }
+
+        updateChart([fScore, bScore, mScore]);
+    }
+
+    function updateChart(scores) {
+        const ctx = document.getElementById('healthChart').getContext('2d');
+        const t = i18n[currentLang];
+
+        if (healthChart) {
+            healthChart.data.labels = t.chart_labels;
+            healthChart.data.datasets[0].data = scores;
+            healthChart.options.plugins.title.text = t.chart_title;
+            healthChart.update();
+        } else {
+            healthChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: t.chart_labels,
+                    datasets: [{
+                        data: scores,
+                        backgroundColor: ['#000', '#666', '#999'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: { display: true, text: t.chart_title },
+                        legend: { display: false }
+                    },
+                    scales: { y: { beginAtZero: true, max: 40 } }
+                }
+            });
+        }
+    }
+
+    window.onload = updateUI;
+</script>
+
+</body>
+</html>
