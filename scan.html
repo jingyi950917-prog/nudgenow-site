@@ -20,8 +20,6 @@ body > * {
   overflow-x:hidden;
 }
 
-/* ====================== */
-
 :root{
   --bg:#f6f8fb;
   --card:#ffffff;
@@ -94,8 +92,6 @@ header p{color:#d1d5db;margin-top:12px;}
   box-shadow:0 10px 40px rgba(0,0,0,.05);
 }
 
-/* ========= FOOTER ========= */
-
 .site-footer{
   width:100%;
   background:#000;
@@ -148,7 +144,17 @@ header p{color:#d1d5db;margin-top:12px;}
   line-height:1.6;
 }
 
-/* ===== MOBILE ===== */
+/* 付费提示文字样式 */
+#contact-dev {
+  margin-top: 24px;
+  padding: 16px;
+  background: #fef2f2;
+  border-left: 4px solid #ef4444;
+  font-size: 14px;
+  color: #b91c1c;
+  border-radius: 4px;
+  line-height: 1.5;
+}
 
 @media(max-width:768px){
   .card{padding:28px;}
@@ -215,6 +221,12 @@ header p{color:#d1d5db;margin-top:12px;}
       onmouseover="this.style.background='#fff';this.style.color='#000';"
       onmouseout="this.style.background='#000';this.style.color='#fff';">
       </a>
+
+      <div id="contact-dev" style="display: none;">
+        <span data-cn="* 免费测试额度已结束。如需完整 PEOS 系统集成方案，请联系开发者。" 
+              data-en="* Free trial expired. For full PEOS system integration, please contact the developer.">
+        </span>
+      </div>
   </div>
 </div>
 
@@ -233,28 +245,60 @@ header p{color:#d1d5db;margin-top:12px;}
 </footer>
 
 <script>
-// 获取按钮元素
 const btnCn = document.getElementById('btn-cn');
 const btnEn = document.getElementById('btn-en');
+const ctaBtn = document.getElementById('cta-btn');
+const contactDev = document.getElementById('contact-dev');
+
+/**
+ * 核心逻辑：全局北京时间统一倒计时
+ */
+function updateButtonStatus() {
+  // 设置截止时间：北京时间 2026-01-25 01:00:00
+  // 使用 ISO 字符串确保在所有浏览器中解析一致 (UTC+8)
+  const DEADLINE = new Date('2026-01-25T01:00:00+08:00').getTime();
+  const now = Date.now();
+
+  if (now >= DEADLINE) {
+    // 【付费模式】
+    ctaBtn.dataset.cn = "支付 $9.9 开启深度诊断 →";
+    ctaBtn.dataset.en = "PAY $9.9 TO START DIAGNOSIS →";
+    // 建议在此处填写你的具体收款链接
+    ctaBtn.href = "YOUR_PAYMENT_URL_HERE"; 
+    
+    // 显示完整系统声明
+    contactDev.style.display = "block";
+  } else {
+    // 【免费模式】
+    ctaBtn.dataset.cn = "立即执行系统诊断 →";
+    ctaBtn.dataset.en = "EXECUTE DIAGNOSIS NOW →";
+    ctaBtn.href = "diagnosis.html";
+    
+    // 隐藏声明
+    contactDev.style.display = "none";
+  }
+}
 
 function setLang(lang){
-  // 核心逻辑：遍历所有带有 data-cn 的元素（包括新按钮）
   document.querySelectorAll("[data-cn]").forEach(el=>{
+    // 针对按钮特殊处理，确保文字能被更新
     el.innerText = el.dataset[lang];
   });
 
-  // 切换顶部按钮状态
   btnCn.classList.toggle("active", lang === "cn");
   btnEn.classList.toggle("active", lang === "en");
-  
-  // 保持 HTML 语言属性同步
   document.documentElement.lang = (lang === "cn" ? "zh-CN" : "en");
 }
 
-// 初始化
+// 1. 先判断时间状态
+updateButtonStatus();
+// 2. 再执行语言渲染
 setLang("cn");
+
+// 可选：如果用户一直挂着页面，每分钟检查一次是否到时
+setInterval(updateButtonStatus, 60000);
 </script>
 
-</body>
 
+</body>
 </html>
