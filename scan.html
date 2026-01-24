@@ -171,31 +171,51 @@ header p{color:#d1d5db;margin-top:12px;}
 <div class="container">
 
 <div class="card">
-<h2>Personal</h2>
-<p data-cn="这不是给公司的系统，是给一个真实的人用的：个体户、老板、自由职业者、正在撑生意的人。"
-data-en="This is not for corporations. It is built for a real human being: the owner, the solo founder, the person holding a business together."></p>
+  <h2>Personal</h2>
+  <p data-cn="这不是给公司的系统，是给一个真实的人用的：个体户、老板、自由职业者、正在撑生意的人。"
+  data-en="This is not for corporations. It is built for a real human being: the owner, the solo founder, the person holding a business together."></p>
 
-<h2>Enterprise</h2>
-<p data-cn="你不是在记账，你在经营一个必须活下去并持续赚钱的商业体。"
-data-en="You are not bookkeeping. You are running something that must survive and generate cash."></p>
+  <h2>Enterprise</h2>
+  <p data-cn="你不是在记账，你在经营一个必须活下去并持续赚钱的商业体。"
+  data-en="You are not bookkeeping. You are running something that must survive and generate cash."></p>
 
-<h2>Operating</h2>
-<p data-cn="你看到的不是报表，而是你的生意每天如何运转。"
-data-en="You are not seeing reports. You are seeing how your business actually operates."></p>
+  <h2>Operating</h2>
+  <p data-cn="你看到的不是报表，而是你的生意每天如何运转。"
+  data-en="You are not seeing reports. You are seeing how your business actually operates."></p>
 
-<h2>System</h2>
-<p data-cn="它把感觉变成事实，把焦虑变成可计算的现实。"
-data-en="It turns feelings into facts and anxiety into something measurable."></p>
+  <h2>System</h2>
+  <p data-cn="它把感觉变成事实，把焦虑变成可计算的现实。"
+  data-en="It turns feelings into facts and anxiety into something measurable."></p>
 </div>
 
 <div class="card">
-<h3 data-cn="PEOS 将为你建立" data-en="PEOS will build for you"></h3>
-<ul>
-<li data-cn="专属ERP系统" data-en="A personal ERP system"></li>
-<li data-cn="经营仪表盘" data-en="A business dashboard"></li>
-<li data-cn="美式商学院课程" data-en="An American-style business education"></li>
-<li data-cn="真正被理解的经营数据" data-en="Business data that is actually understood"></li>
-</ul>
+  <h3 data-cn="PEOS 将为你建立" data-en="PEOS will build for you"></h3>
+  <ul>
+    <li data-cn="专属ERP系统" data-en="A personal ERP system"></li>
+    <li data-cn="经营仪表盘" data-en="A business dashboard"></li>
+    <li data-cn="美式商学院课程" data-en="An American-style business education"></li>
+    <li data-cn="真正被理解的经营数据" data-en="Business data that is actually understood"></li>
+  </ul>
+
+  <div style="margin-top: 40px;">
+      <a href="diagnosis.html" id="cta-btn" style="
+          display: inline-block;
+          padding: 18px 32px;
+          background: #000;
+          color: #fff;
+          text-decoration: none;
+          border-radius: 12px;
+          font-weight: 700;
+          font-size: 15px;
+          transition: 0.2s;
+          border: 2px solid #000;
+      " 
+      data-cn="立即执行系统诊断 →" 
+      data-en="EXECUTE DIAGNOSIS NOW →"
+      onmouseover="this.style.background='#fff';this.style.color='#000';"
+      onmouseout="this.style.background='#000';this.style.color='#fff';">
+      </a>
+  </div>
 </div>
 
 </div>
@@ -206,23 +226,35 @@ data-en="It turns feelings into facts and anxiety into something measurable."></
     <div class="footer-brand">NudgeNow</div>
     <div class="footer-tagline">Reality-as-a-Service</div>
     <div class="footer-info">
-      
-      <div>Telegram            @nudg5</div>
-      <div>New York  347 Madison Ave</div>
-    
+      <div>Telegram @nudg5</div>
+      <div>New York 347 Madison Ave</div>
+    </div>
   </div>
 </footer>
 
 <script>
+// 获取按钮元素
+const btnCn = document.getElementById('btn-cn');
+const btnEn = document.getElementById('btn-en');
+
 function setLang(lang){
+  // 核心逻辑：遍历所有带有 data-cn 的元素（包括新按钮）
   document.querySelectorAll("[data-cn]").forEach(el=>{
     el.innerText = el.dataset[lang];
   });
-  btnCn.classList.toggle("active",lang==="cn");
-  btnEn.classList.toggle("active",lang==="en");
+
+  // 切换顶部按钮状态
+  btnCn.classList.toggle("active", lang === "cn");
+  btnEn.classList.toggle("active", lang === "en");
+  
+  // 保持 HTML 语言属性同步
+  document.documentElement.lang = (lang === "cn" ? "zh-CN" : "en");
 }
+
+// 初始化
 setLang("cn");
 </script>
 
 </body>
+
 </html>
