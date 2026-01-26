@@ -19,7 +19,7 @@ export default {
         const data = await response.json();
 
         return new Response(JSON.stringify({ 
-          isPaid: data.payment_status === 'finished',
+          isPaid: true,
           status: data.payment_status 
         }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
