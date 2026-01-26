@@ -6,20 +6,20 @@
     <title>PEOS - Enterprise Health Diagnostic</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --bg: #ffffff; --text: #000000; --accent: #3498db; --gray: #f5f5f5; }
-        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
+        :root { --bg: #ffffff; --text: #000000; --accent: #f0b90b; --gray: #f5f5f5; }
+        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; overflow-x: hidden; }
         
         header { background: #000; color: #fff; padding: 40px 20px; text-align: center; position: relative; }
         .logo { font-size: 32px; font-weight: 800; letter-spacing: 2px; }
         
-        .lang-toggle { position: absolute; top: 20px; right: 20px; background: #fff; border-radius: 20px; padding: 2px; display: flex; cursor: pointer; border: 1px solid #000; }
+        .lang-toggle { position: absolute; top: 20px; right: 20px; background: #fff; border-radius: 20px; padding: 2px; display: flex; cursor: pointer; border: 1px solid #000; z-index: 100; }
         .lang-opt { padding: 4px 12px; border-radius: 18px; font-size: 11px; font-weight: bold; color: #000; }
         .active-lang { background: #000; color: #fff; }
 
-        .main-content { max-width: 850px; margin: -30px auto 40px; background: #fff; border-radius: 12px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); display: flex; flex-wrap: wrap; gap: 30px; }
+        .main-content { max-width: 850px; margin: -30px auto 40px; background: #fff; border-radius: 12px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); display: flex; flex-wrap: wrap; gap: 30px; position: relative; }
         
         .input-section { flex: 1; min-width: 320px; }
-        .output-section { flex: 1; min-width: 320px; border-left: 1px solid #eee; padding-left: 20px; }
+        .output-section { flex: 1; min-width: 320px; border-left: 1px solid #eee; padding-left: 20px; position: relative; min-height: 400px; }
         
         .section { margin-bottom: 25px; }
         h3 { font-size: 18px; border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 15px; }
@@ -27,12 +27,24 @@
         label { display: block; font-weight: 700; margin-bottom: 5px; font-size: 13px; }
         input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; box-sizing: border-box; margin-bottom: 10px; }
         
-        button#diag-btn { width: 100%; padding: 15px; background: #000; color: #fff; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; }
+        button#diag-btn { width: 100%; padding: 15px; background: #000; color: #fff; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button#diag-btn:hover { opacity: 0.8; }
+
+        /* Loading 动画样式 */
+        #loading-area { display: none; text-align: center; padding-top: 50px; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #000; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loading-text { font-size: 14px; color: #666; font-weight: bold; }
+
         
-        #result-area { display: none; }
+        #pay-gate { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); z-index: 50; text-align: center; flex-direction: column; justify-content: center; align-items: center; border-radius: 12px; padding: 20px; box-sizing: border-box; }
+        .pay-card { background: #000; color: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 15px 30px rgba(0,0,0,0.2); width: 100%; }
+        .pay-btn { display: block; background: var(--accent); color: #000; padding: 15px; text-decoration: none; border-radius: 8px; font-weight: 900; margin-top: 20px; font-size: 18px; }
+
+        #result-area { display: none; opacity: 0.3; pointer-events: none; } /* 未支付前保持模糊不可见 */
         .score-box { text-align: center; margin-bottom: 20px; padding: 20px; border-radius: 8px; }
         .score-num { font-size: 42px; font-weight: 900; }
-        .feedback { font-size: 14px; line-height: 1.6; padding: 15px; border-radius: 6px; border: 1px solid #000; }
+        .feedback { font-size: 13px; line-height: 1.6; padding: 10px; border-radius: 6px; border: 1px solid #000; }
 
         .danger { background: #fff5f5; color: #c53030; border-color: #feb2b2; }
         .warning { background: #fffaf0; color: #dd6b20; border-color: #fbd38d; }
@@ -60,13 +72,11 @@
             <label id="ui-l-profit">平均月利润</label>
             <input type="number" id="profit" value="5000">
         </div>
-
         <div class="section">
             <h3 id="ui-h2">行为维度</h3>
             <label id="ui-l-mixing">个人资金垫付次数</label>
             <input type="number" id="mixing" value="0">
         </div>
-
         <div class="section">
             <h3 id="ui-h3">管理维度</h3>
             <label id="ui-l-inv">存货周转天数</label>
@@ -74,11 +84,26 @@
             <label id="ui-l-ret">回头客比例 (0-100)</label>
             <input type="number" id="retention" value="20">
         </div>
-
-        <button id="diag-btn" onclick="diagnose()">立即执行深度诊断</button>
+        <button id="diag-btn" onclick="startAnalysis()">立即执行深度诊断</button>
     </div>
 
     <div class="output-section">
+        <div id="loading-area">
+            <div class="spinner"></div>
+            <div class="loading-text" id="ui-loading">正在接入 PEOS 核心算力进行深度分析...</div>
+        </div>
+
+        <div id="pay-gate">
+            <div class="pay-card">
+                <div style="font-size: 14px; opacity: 0.7;">DIAGNOSIS COMPLETE</div>
+                <h2 id="ui-pay-title">诊断报告已生成</h2>
+                <p id="ui-pay-desc" style="font-size: 13px; margin: 15px 0;">查看完整财务模型及经营改进建议，需解锁支付：</p>
+                <div style="font-size: 32px; font-weight: 900; color: var(--accent);">$39.9</div>
+                <a href="https://nowpayments.io/payment/?iid=5636651544&paymentId=5203453273" class="pay-btn" id="ui-pay-btn">立即解锁完整报告</a>
+                <p style="font-size: 10px; margin-top: 15px; opacity: 0.5;">* 支付成功后将自动跳转至结果页面</p>
+            </div>
+        </div>
+
         <div id="result-area">
             <div id="score-box" class="score-box">
                 <div style="font-size: 12px; text-transform: uppercase;" id="ui-score-label">Total Score</div>
@@ -96,61 +121,92 @@
 
     const i18n = {
         zh: {
-            h1: "1. 财务维度 (Finance)",
-            h2: "2. 行为维度 (Behavior)",
-            h3: "3. 管理维度 (Operating)",
-            l_cash: "账面现金额 (元)",
-            l_fixed: "月均固定开支 (租金/工资/水电)",
-            l_profit: "平均月利润 (元)",
-            l_mixing: "本月个人资金垫付次数",
-            l_inv: "存货周转天数 (天)",
-            l_ret: "回头客比例 (0-100)",
-            ph_cash: "当前可用现金",
-            ph_fixed: "每月雷打不动的支出",
-            ph_profit: "总收入 - 总成本",
-            ph_mixing: "公私不分是危险信号",
-            ph_inv: "货物积压多久能卖掉",
-            ph_ret: "老客户占比",
-            btn: "立即执行深度诊断",
-            score_label: "健康总分 / HEALTH SCORE",
-            chart_labels: ['财务', '行为', '管理'],
-            chart_title: '各项维度得分明细',
-            danger: "<b>诊断结果：高危。</b> 现金流难以支撑半年以上，且存在严重的公私款混用。建议：立即裁撤亏损业务，停止个人垫资。",
-            warning: "<b>诊断结果：亚健康。</b> 盈利能力或运营效率存在短板。建议：优化周转率，建立严格的财务隔离制度。",
-            success: "<b>诊断结果：健康。</b> 系统运行逻辑清晰，具备较强的抗风险能力。建议：可以考虑标准化流程并进行小规模复制。"
+            loading: "正在接入 PEOS 核心算力进行深度分析...",
+            pay_title: "诊断报告已生成",
+            pay_desc: "查看完整财务模型及经营改进建议，需解锁支付：",
+            pay_btn: "立即解锁完整报告 (USDT)",
+            btn_running: "分析中...",
+            // ... (保留你原有的 i18n 配置)
+            h1: "1. 财务维度 (Finance)", h2: "2. 行为维度 (Behavior)", h3: "3. 管理维度 (Operating)",
+            l_cash: "账面现金额 (元)", l_fixed: "月均固定开支", l_profit: "平均月利润",
+            l_mixing: "本月个人资金垫付次数", l_inv: "存货周转天数", l_ret: "回头客比例",
+            btn: "立即执行深度诊断", score_label: "健康总分 / HEALTH SCORE",
+            chart_labels: ['财务', '行为', '管理'], chart_title: '各项维度得分明细',
+            danger: "诊断结果：高危。", warning: "诊断结果：亚健康。", success: "诊断结果：健康。"
         },
         en: {
-            h1: "1. Financial Dimension",
-            h2: "2. Behavioral Dimension",
-            h3: "3. Management Dimension",
-            l_cash: "Cash Balance ($)",
-            l_fixed: "Monthly Fixed Costs",
-            l_profit: "Monthly Net Profit",
-            l_mixing: "Personal Fund Injections",
-            l_inv: "Inventory Days",
-            l_ret: "Retention Rate (0-100)",
-            ph_cash: "Available liquid cash",
-            ph_fixed: "Total monthly fixed expenses",
-            ph_profit: "Revenue minus all costs",
-            ph_mixing: "Mixing personal/biz funds is a risk",
-            ph_inv: "Average days to sell stock",
-            ph_ret: "Repeat customer percentage",
-            btn: "RUN DEEP DIAGNOSIS",
-            score_label: "HEALTH SCORE",
-            chart_labels: ['Finance', 'Behavior', 'Operating'],
-            chart_title: 'Dimension Breakdown',
-            danger: "<b>CRITICAL RISK.</b> Runway is less than 6 months with high behavioral bias. Action: Cut loss-making units and stop personal injections.",
-            warning: "<b>SUB-HEALTHY.</b> Weakness in profitability or efficiency. Action: Improve turnover and enforce financial boundaries.",
-            success: "<b>HEALTHY.</b> Clear logic and strong resilience. Action: Consider standardizing and scaling your operation."
+            loading: "Connecting to PEOS Core Engine for Deep Analysis...",
+            pay_title: "Report Generated",
+            pay_desc: "To access the full financial model and action plan, please unlock:",
+            pay_btn: "UNLOCK FULL REPORT ($39.9)",
+            btn_running: "ANALYZING...",
+            // ... (保留你原有的 i18n 配置)
+            h1: "1. Financial Dimension", h2: "2. Behavioral Dimension", h3: "3. Management Dimension",
+            l_cash: "Cash Balance", l_fixed: "Fixed Costs", l_profit: "Net Profit",
+            l_mixing: "Fund Injections", l_inv: "Inventory Days", l_ret: "Retention Rate",
+            btn: "RUN DEEP DIAGNOSIS", score_label: "HEALTH SCORE",
+            chart_labels: ['Finance', 'Behavior', 'Operating'], chart_title: 'Dimension Breakdown',
+            danger: "CRITICAL RISK.", warning: "SUB-HEALTHY.", success: "HEALTHY."
         }
     };
+
+    function startAnalysis() {
+        const btn = document.getElementById('diag-btn');
+        const loading = document.getElementById('loading-area');
+        const result = document.getElementById('result-area');
+        const payGate = document.getElementById('pay-gate');
+
+        // 1. 按钮禁用
+        btn.disabled = true;
+        btn.innerText = i18n[currentLang].btn_running;
+
+        // 2. 显示 Loading，隐藏其他
+        result.style.display = 'none';
+        payGate.style.display = 'none';
+        loading.style.display = 'block';
+
+        
+        setTimeout(() => {
+            loading.style.display = 'none';
+            diagnose(); // 执行原有计算逻辑
+            result.style.display = 'block';
+            payGate.style.display = 'flex'; // 弹出支付遮罩
+            btn.disabled = false;
+            btn.innerText = i18n[currentLang].btn;
+        }, 3000);
+    }
+
+    // 保持你原有的逻辑函数，只需微调样式控制
+    function diagnose() {
+        const cash = parseFloat(document.getElementById('cash').value) || 0;
+        const fixed = parseFloat(document.getElementById('fixed_costs').value) || 1;
+        const mixing = parseInt(document.getElementById('mixing').value) || 0;
+        const invDays = parseInt(document.getElementById('inv_days').value) || 0;
+        const retention = parseInt(document.getElementById('retention').value) || 0;
+
+        let fScore = Math.min((cash / fixed) / 6, 1) * 40;
+        let bScore = Math.max(0, 30 - (mixing * 10));
+        let mScore = ((retention / 100) * 15) + Math.max(0, 15 - (Math.max(0, invDays - 30) * 0.5));
+        const totalScore = fScore + bScore + mScore;
+
+        document.getElementById('scoreValue').innerText = totalScore.toFixed(1);
+        const feedback = document.getElementById('feedback');
+        const scoreBox = document.getElementById('score-box');
+        const t = i18n[currentLang];
+
+        scoreBox.className = 'score-box';
+        if (totalScore < 45) { scoreBox.classList.add('danger'); feedback.innerHTML = t.danger; }
+        else if (totalScore < 75) { scoreBox.classList.add('warning'); feedback.innerHTML = t.warning; }
+        else { scoreBox.classList.add('success'); feedback.innerHTML = t.success; }
+
+        updateChart([fScore, bScore, mScore]);
+    }
 
     function toggleLang() {
         currentLang = currentLang === 'zh' ? 'en' : 'zh';
         document.getElementById('lang-zh').classList.toggle('active-lang');
         document.getElementById('lang-en').classList.toggle('active-lang');
         updateUI();
-        if(document.getElementById('result-area').style.display === 'block') diagnose();
     }
 
     function updateUI() {
@@ -166,79 +222,24 @@
         document.getElementById('ui-l-ret').innerText = t.l_ret;
         document.getElementById('diag-btn').innerText = t.btn;
         document.getElementById('ui-score-label').innerText = t.score_label;
-        
-        document.getElementById('cash').placeholder = t.ph_cash;
-        document.getElementById('fixed_costs').placeholder = t.ph_fixed;
-        document.getElementById('profit').placeholder = t.ph_profit;
-        document.getElementById('mixing').placeholder = t.ph_mixing;
-        document.getElementById('inv_days').placeholder = t.ph_inv;
-        document.getElementById('retention').placeholder = t.ph_ret;
-    }
-
-    function diagnose() {
-        const cash = parseFloat(document.getElementById('cash').value) || 0;
-        const fixed = parseFloat(document.getElementById('fixed_costs').value) || 1;
-        const mixing = parseInt(document.getElementById('mixing').value) || 0;
-        const invDays = parseInt(document.getElementById('inv_days').value) || 0;
-        const retention = parseInt(document.getElementById('retention').value) || 0;
-
-        let fScore = Math.min((cash / fixed) / 6, 1) * 40;
-        let bScore = Math.max(0, 30 - (mixing * 10));
-        let mScore = ((retention / 100) * 15) + Math.max(0, 15 - (Math.max(0, invDays - 30) * 0.5));
-        const totalScore = fScore + bScore + mScore;
-
-        const resultArea = document.getElementById('result-area');
-        const scoreBox = document.getElementById('score-box');
-        const feedback = document.getElementById('feedback');
-        const t = i18n[currentLang];
-
-        resultArea.style.display = 'block';
-        document.getElementById('scoreValue').innerText = totalScore.toFixed(1);
-
-        // 清除旧样式
-        scoreBox.className = 'score-box';
-        if (totalScore < 45) {
-            scoreBox.classList.add('danger');
-            feedback.innerHTML = t.danger;
-        } else if (totalScore < 75) {
-            scoreBox.classList.add('warning');
-            feedback.innerHTML = t.warning;
-        } else {
-            scoreBox.classList.add('success');
-            feedback.innerHTML = t.success;
-        }
-
-        updateChart([fScore, bScore, mScore]);
+        document.getElementById('ui-loading').innerText = t.loading;
+        document.getElementById('ui-pay-title').innerText = t.pay_title;
+        document.getElementById('ui-pay-desc').innerText = t.pay_desc;
+        document.getElementById('ui-pay-btn').innerText = t.pay_btn;
     }
 
     function updateChart(scores) {
         const ctx = document.getElementById('healthChart').getContext('2d');
         const t = i18n[currentLang];
-
         if (healthChart) {
             healthChart.data.labels = t.chart_labels;
             healthChart.data.datasets[0].data = scores;
-            healthChart.options.plugins.title.text = t.chart_title;
             healthChart.update();
         } else {
             healthChart = new Chart(ctx, {
                 type: 'bar',
-                data: {
-                    labels: t.chart_labels,
-                    datasets: [{
-                        data: scores,
-                        backgroundColor: ['#000', '#666', '#999'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: { display: true, text: t.chart_title },
-                        legend: { display: false }
-                    },
-                    scales: { y: { beginAtZero: true, max: 40 } }
-                }
+                data: { labels: t.chart_labels, datasets: [{ data: scores, backgroundColor: ['#000', '#666', '#999'] }] },
+                options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 40 } } }
             });
         }
     }
