@@ -19,29 +19,31 @@
         .main-content { max-width: 850px; margin: -30px auto 40px; background: #fff; border-radius: 12px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); display: flex; flex-wrap: wrap; gap: 30px; position: relative; }
         
         .input-section { flex: 1; min-width: 320px; }
-        .output-section { flex: 1; min-width: 320px; border-left: 1px solid #eee; padding-left: 20px; position: relative; min-height: 400px; }
+        .output-section { flex: 1; min-width: 320px; border-left: 1px solid #eee; padding-left: 20px; position: relative; min-height: 450px; }
         
         .section { margin-bottom: 25px; }
         h3 { font-size: 18px; border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 15px; }
         
         label { display: block; font-weight: 700; margin-bottom: 5px; font-size: 13px; }
-        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; box-sizing: border-box; margin-bottom: 10px; }
+        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; box-sizing: border-box; margin-bottom: 12px; transition: border 0.3s; }
+        input:focus { border-color: #000; outline: none; }
         
-        button#diag-btn { width: 100%; padding: 15px; background: #000; color: #fff; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button#diag-btn { width: 100%; padding: 15px; background: #000; color: #fff; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
         button#diag-btn:hover { opacity: 0.8; }
 
-        /* Loading 动画样式 */
-        #loading-area { display: none; text-align: center; padding-top: 50px; }
+        /* Loading 动画 */
+        #loading-area { display: none; text-align: center; padding-top: 80px; }
         .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #000; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .loading-text { font-size: 14px; color: #666; font-weight: bold; }
+        .loading-text { font-size: 14px; color: #666; font-weight: bold; line-height: 1.5; }
 
-        
-        #pay-gate { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); z-index: 50; text-align: center; flex-direction: column; justify-content: center; align-items: center; border-radius: 12px; padding: 20px; box-sizing: border-box; }
-        .pay-card { background: #000; color: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 15px 30px rgba(0,0,0,0.2); width: 100%; }
-        .pay-btn { display: block; background: var(--accent); color: #000; padding: 15px; text-decoration: none; border-radius: 8px; font-weight: 900; margin-top: 20px; font-size: 18px; }
+        /* 支付遮罩层 */
+        #pay-gate { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); z-index: 50; text-align: center; flex-direction: column; justify-content: center; align-items: center; border-radius: 12px; padding: 20px; box-sizing: border-box; }
+        .pay-card { background: #000; color: #fff; padding: 40px 30px; border-radius: 15px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); width: 100%; max-width: 320px; }
+        .pay-btn { display: block; background: var(--accent); color: #000; padding: 16px; text-decoration: none; border-radius: 8px; font-weight: 900; margin-top: 25px; font-size: 18px; transition: transform 0.2s; }
+        .pay-btn:hover { transform: scale(1.05); }
 
-        #result-area { display: none; opacity: 0.3; pointer-events: none; } /* 未支付前保持模糊不可见 */
+        #result-area { display: none; opacity: 0.2; pointer-events: none; }
         .score-box { text-align: center; margin-bottom: 20px; padding: 20px; border-radius: 8px; }
         .score-num { font-size: 42px; font-weight: 900; }
         .feedback { font-size: 13px; line-height: 1.6; padding: 10px; border-radius: 6px; border: 1px solid #000; }
@@ -64,26 +66,32 @@
 <div class="main-content">
     <div class="input-section">
         <div class="section">
-            <h3 id="ui-h1">财务维度</h3>
+            <h3 id="ui-h1">1. 财务维度 (Finance)</h3>
             <label id="ui-l-cash">账面现金额 (元)</label>
-            <input type="number" id="cash" value="30000">
+            <input type="number" id="cash" placeholder="当前账面上所有可动用的现金">
+            
             <label id="ui-l-fixed">月均固定开支</label>
-            <input type="number" id="fixed_costs" value="15000">
-            <label id="ui-l-profit">平均月利润</label>
-            <input type="number" id="profit" value="5000">
+            <input type="number" id="fixed_costs" placeholder="每月租金、工资、水电等固定支出">
+            
+            <label id="ui-l-profit">平均月利润 (元)</label>
+            <input type="number" id="profit" placeholder="总收入减去总成本后的平均净利">
         </div>
+
         <div class="section">
-            <h3 id="ui-h2">行为维度</h3>
-            <label id="ui-l-mixing">个人资金垫付次数</label>
-            <input type="number" id="mixing" value="0">
+            <h3 id="ui-h2">2. 行为维度 (Behavior)</h3>
+            <label id="ui-l-mixing">本月个人资金垫付次数</label>
+            <input type="number" id="mixing" placeholder="公私资金混用的频率（是危险信号）">
         </div>
+
         <div class="section">
-            <h3 id="ui-h3">管理维度</h3>
-            <label id="ui-l-inv">存货周转天数</label>
-            <input type="number" id="inv_days" value="30">
+            <h3 id="ui-h3">3. 管理维度 (Operating)</h3>
+            <label id="ui-l-inv">存货周转天数 (天)</label>
+            <input type="number" id="inv_days" placeholder="你的货物积压多久能卖掉/回笼资金">
+            
             <label id="ui-l-ret">回头客比例 (0-100)</label>
-            <input type="number" id="retention" value="20">
+            <input type="number" id="retention" placeholder="老客户占总客户的百分比">
         </div>
+
         <button id="diag-btn" onclick="startAnalysis()">立即执行深度诊断</button>
     </div>
 
@@ -95,18 +103,18 @@
 
         <div id="pay-gate">
             <div class="pay-card">
-                <div style="font-size: 14px; opacity: 0.7;">DIAGNOSIS COMPLETE</div>
-                <h2 id="ui-pay-title">诊断报告已生成</h2>
-                <p id="ui-pay-desc" style="font-size: 13px; margin: 15px 0;">查看完整财务模型及经营改进建议，需解锁支付：</p>
-                <div style="font-size: 32px; font-weight: 900; color: var(--accent);">$39.9</div>
+                <div style="font-size: 12px; opacity: 0.7; letter-spacing: 1px;">DIAGNOSIS COMPLETE</div>
+                <h2 id="ui-pay-title" style="margin: 10px 0;">诊断报告已生成</h2>
+                <p id="ui-pay-desc" style="font-size: 13px; margin: 15px 0; line-height: 1.4; opacity: 0.8;">查看完整财务模型及针对性经营建议，需解锁支付：</p>
+                <div style="font-size: 36px; font-weight: 900; color: var(--accent);">$39.9</div>
                 <a href="https://nowpayments.io/payment/?iid=5636651544&paymentId=5203453273" class="pay-btn" id="ui-pay-btn">立即解锁完整报告</a>
-                <p style="font-size: 10px; margin-top: 15px; opacity: 0.5;">* 支付成功后将自动跳转至结果页面</p>
+                <p style="font-size: 10px; margin-top: 20px; opacity: 0.5;">* 支付成功后将自动跳转回此页面</p>
             </div>
         </div>
 
         <div id="result-area">
             <div id="score-box" class="score-box">
-                <div style="font-size: 12px; text-transform: uppercase;" id="ui-score-label">Total Score</div>
+                <div style="font-size: 11px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;" id="ui-score-label">Health Score</div>
                 <div class="score-num" id="scoreValue">0</div>
                 <div class="feedback" id="feedback"></div>
             </div>
@@ -119,88 +127,67 @@
     let currentLang = 'zh';
     let healthChart;
 
+    // 翻译字典，包含了所有的填写引导（Placeholders）
     const i18n = {
         zh: {
-            loading: "正在接入 PEOS 核心算力进行深度分析...",
+            h1: "1. 财务维度 (Finance)",
+            h2: "2. 行为维度 (Behavior)",
+            h3: "3. 管理维度 (Operating)",
+            l_cash: "账面现金额 (元)",
+            l_fixed: "月均固定开支",
+            l_profit: "平均月利润 (元)",
+            l_mixing: "本月个人资金垫付次数",
+            l_inv: "存货周转天数 (天)",
+            l_ret: "回头客比例 (0-100)",
+            ph_cash: "当前账面上所有可动用的现金",
+            ph_fixed: "每月租金、工资、水电等固定支出",
+            ph_profit: "总收入减去总成本后的平均净利",
+            ph_mixing: "公私资金混用的频率（是危险信号）",
+            ph_inv: "你的货物积压多久能卖掉/回笼资金",
+            ph_ret: "老客户占总客户的百分比",
+            btn: "立即执行深度诊断",
+            btn_running: "PEOS 系统分析中...",
+            loading: "正在接入 PEOS 核心算力<br>执行深度经营建模分析...",
             pay_title: "诊断报告已生成",
-            pay_desc: "查看完整财务模型及经营改进建议，需解锁支付：",
-            pay_btn: "立即解锁完整报告 (USDT)",
-            btn_running: "分析中...",
-            // ... (保留你原有的 i18n 配置)
-            h1: "1. 财务维度 (Finance)", h2: "2. 行为维度 (Behavior)", h3: "3. 管理维度 (Operating)",
-            l_cash: "账面现金额 (元)", l_fixed: "月均固定开支", l_profit: "平均月利润",
-            l_mixing: "本月个人资金垫付次数", l_inv: "存货周转天数", l_ret: "回头客比例",
-            btn: "立即执行深度诊断", score_label: "健康总分 / HEALTH SCORE",
-            chart_labels: ['财务', '行为', '管理'], chart_title: '各项维度得分明细',
-            danger: "诊断结果：高危。", warning: "诊断结果：亚健康。", success: "诊断结果：健康。"
+            pay_desc: "查看完整财务模型及针对性经营建议，需解锁支付：",
+            pay_btn: "立即解锁完整报告",
+            score_label: "健康总分 / HEALTH SCORE",
+            chart_labels: ['财务', '行为', '管理'],
+            chart_title: '各项维度得分明细',
+            danger: "<b>高危：</b> 现金储备严重不足，且存在严重的公私款混用。建议：立即停止个人垫资，裁撤亏损业务。",
+            warning: "<b>亚健康：</b> 盈利能力或运营效率存在短板。建议：优化存货周转，建立严格的财务隔离制度。",
+            success: "<b>健康：</b> 逻辑清晰，具备较强的抗风险能力。建议：可进行标准化流程，考虑小规模复制。"
         },
         en: {
-            loading: "Connecting to PEOS Core Engine for Deep Analysis...",
+            h1: "1. Financial Dimension",
+            h2: "2. Behavioral Dimension",
+            h3: "3. Management Dimension",
+            l_cash: "Cash Balance ($)",
+            l_fixed: "Monthly Fixed Costs",
+            l_profit: "Monthly Net Profit",
+            l_mixing: "Personal Fund Injections",
+            l_inv: "Inventory Days",
+            l_ret: "Retention Rate (0-100)",
+            ph_cash: "Current liquid cash available",
+            ph_fixed: "Rent, salary, utilities, etc.",
+            ph_profit: "Net profit after all costs",
+            ph_mixing: "Frequency of mixing personal/biz funds",
+            ph_inv: "Days to turnover your inventory",
+            ph_ret: "Percentage of repeat customers",
+            btn: "RUN DEEP DIAGNOSIS",
+            btn_running: "PEOS Analyzing...",
+            loading: "Connecting to PEOS Core Engine<br>Generating Financial Model...",
             pay_title: "Report Generated",
-            pay_desc: "To access the full financial model and action plan, please unlock:",
+            pay_desc: "To access the full model and specific action plans, please unlock:",
             pay_btn: "UNLOCK FULL REPORT ($39.9)",
-            btn_running: "ANALYZING...",
-            // ... (保留你原有的 i18n 配置)
-            h1: "1. Financial Dimension", h2: "2. Behavioral Dimension", h3: "3. Management Dimension",
-            l_cash: "Cash Balance", l_fixed: "Fixed Costs", l_profit: "Net Profit",
-            l_mixing: "Fund Injections", l_inv: "Inventory Days", l_ret: "Retention Rate",
-            btn: "RUN DEEP DIAGNOSIS", score_label: "HEALTH SCORE",
-            chart_labels: ['Finance', 'Behavior', 'Operating'], chart_title: 'Dimension Breakdown',
-            danger: "CRITICAL RISK.", warning: "SUB-HEALTHY.", success: "HEALTHY."
+            score_label: "HEALTH SCORE",
+            chart_labels: ['Finance', 'Behavior', 'Operating'],
+            chart_title: 'Dimension Breakdown',
+            danger: "<b>CRITICAL:</b> Insufficient runway and poor fund isolation. Action: Stop injections, cut losses.",
+            warning: "<b>SUB-HEALTHY:</b> Weak turnover or profit margins. Action: Optimize inventory and enforce boundaries.",
+            success: "<b>HEALTHY:</b> Strong resilience and clear logic. Action: Standardize and scale."
         }
     };
-
-    function startAnalysis() {
-        const btn = document.getElementById('diag-btn');
-        const loading = document.getElementById('loading-area');
-        const result = document.getElementById('result-area');
-        const payGate = document.getElementById('pay-gate');
-
-        // 1. 按钮禁用
-        btn.disabled = true;
-        btn.innerText = i18n[currentLang].btn_running;
-
-        // 2. 显示 Loading，隐藏其他
-        result.style.display = 'none';
-        payGate.style.display = 'none';
-        loading.style.display = 'block';
-
-        
-        setTimeout(() => {
-            loading.style.display = 'none';
-            diagnose(); // 执行原有计算逻辑
-            result.style.display = 'block';
-            payGate.style.display = 'flex'; // 弹出支付遮罩
-            btn.disabled = false;
-            btn.innerText = i18n[currentLang].btn;
-        }, 3000);
-    }
-
-    // 保持你原有的逻辑函数，只需微调样式控制
-    function diagnose() {
-        const cash = parseFloat(document.getElementById('cash').value) || 0;
-        const fixed = parseFloat(document.getElementById('fixed_costs').value) || 1;
-        const mixing = parseInt(document.getElementById('mixing').value) || 0;
-        const invDays = parseInt(document.getElementById('inv_days').value) || 0;
-        const retention = parseInt(document.getElementById('retention').value) || 0;
-
-        let fScore = Math.min((cash / fixed) / 6, 1) * 40;
-        let bScore = Math.max(0, 30 - (mixing * 10));
-        let mScore = ((retention / 100) * 15) + Math.max(0, 15 - (Math.max(0, invDays - 30) * 0.5));
-        const totalScore = fScore + bScore + mScore;
-
-        document.getElementById('scoreValue').innerText = totalScore.toFixed(1);
-        const feedback = document.getElementById('feedback');
-        const scoreBox = document.getElementById('score-box');
-        const t = i18n[currentLang];
-
-        scoreBox.className = 'score-box';
-        if (totalScore < 45) { scoreBox.classList.add('danger'); feedback.innerHTML = t.danger; }
-        else if (totalScore < 75) { scoreBox.classList.add('warning'); feedback.innerHTML = t.warning; }
-        else { scoreBox.classList.add('success'); feedback.innerHTML = t.success; }
-
-        updateChart([fScore, bScore, mScore]);
-    }
 
     function toggleLang() {
         currentLang = currentLang === 'zh' ? 'en' : 'zh';
@@ -222,10 +209,75 @@
         document.getElementById('ui-l-ret').innerText = t.l_ret;
         document.getElementById('diag-btn').innerText = t.btn;
         document.getElementById('ui-score-label').innerText = t.score_label;
-        document.getElementById('ui-loading').innerText = t.loading;
+        document.getElementById('ui-loading').innerHTML = t.loading;
         document.getElementById('ui-pay-title').innerText = t.pay_title;
         document.getElementById('ui-pay-desc').innerText = t.pay_desc;
         document.getElementById('ui-pay-btn').innerText = t.pay_btn;
+        
+        // 更新所有的填写解释 (Placeholders)
+        document.getElementById('cash').placeholder = t.ph_cash;
+        document.getElementById('fixed_costs').placeholder = t.ph_fixed;
+        document.getElementById('profit').placeholder = t.ph_profit;
+        document.getElementById('mixing').placeholder = t.ph_mixing;
+        document.getElementById('inv_days').placeholder = t.ph_inv;
+        document.getElementById('retention').placeholder = t.ph_ret;
+    }
+
+    function startAnalysis() {
+        const btn = document.getElementById('diag-btn');
+        const loading = document.getElementById('loading-area');
+        const result = document.getElementById('result-area');
+        const payGate = document.getElementById('pay-gate');
+
+        btn.disabled = true;
+        btn.innerText = i18n[currentLang].btn_running;
+
+        result.style.display = 'none';
+        payGate.style.display = 'none';
+        loading.style.display = 'block';
+
+        // 模拟 3 秒钟的“专家级计算”
+        setTimeout(() => {
+            loading.style.display = 'none';
+            diagnose(); 
+            result.style.display = 'block';
+            payGate.style.display = 'flex'; 
+            btn.disabled = false;
+            btn.innerText = i18n[currentLang].btn;
+        }, 3000);
+    }
+
+    function diagnose() {
+        const cash = parseFloat(document.getElementById('cash').value) || 0;
+        const fixed = parseFloat(document.getElementById('fixed_costs').value) || 1;
+        const mixing = parseInt(document.getElementById('mixing').value) || 0;
+        const invDays = parseInt(document.getElementById('inv_days').value) || 0;
+        const retention = parseInt(document.getElementById('retention').value) || 0;
+
+        // PEOS 核心算法逻辑
+        let fScore = Math.min((cash / fixed) / 6, 1) * 40; 
+        let bScore = Math.max(0, 30 - (mixing * 10)); 
+        let mScore = ((retention / 100) * 15) + Math.max(0, 15 - (Math.max(0, invDays - 30) * 0.5));
+        const totalScore = fScore + bScore + mScore;
+
+        document.getElementById('scoreValue').innerText = totalScore.toFixed(1);
+        const feedback = document.getElementById('feedback');
+        const scoreBox = document.getElementById('score-box');
+        const t = i18n[currentLang];
+
+        scoreBox.className = 'score-box';
+        if (totalScore < 45) { 
+            scoreBox.classList.add('danger'); 
+            feedback.innerHTML = t.danger; 
+        } else if (totalScore < 75) { 
+            scoreBox.classList.add('warning'); 
+            feedback.innerHTML = t.warning; 
+        } else { 
+            scoreBox.classList.add('success'); 
+            feedback.innerHTML = t.success; 
+        }
+
+        updateChart([fScore, bScore, mScore]);
     }
 
     function updateChart(scores) {
@@ -238,8 +290,19 @@
         } else {
             healthChart = new Chart(ctx, {
                 type: 'bar',
-                data: { labels: t.chart_labels, datasets: [{ data: scores, backgroundColor: ['#000', '#666', '#999'] }] },
-                options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 40 } } }
+                data: { 
+                    labels: t.chart_labels, 
+                    datasets: [{ 
+                        data: scores, 
+                        backgroundColor: ['#000', '#666', '#999'],
+                        borderRadius: 4
+                    }] 
+                },
+                options: { 
+                    responsive: true, 
+                    plugins: { legend: { display: false } }, 
+                    scales: { y: { beginAtZero: true, max: 40 } } 
+                }
             });
         }
     }
