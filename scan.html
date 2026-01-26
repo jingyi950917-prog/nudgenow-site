@@ -15,16 +15,12 @@ html, body {
   overflow-x:hidden;
 }
 
-body > * {
-  max-width:100vw;
-  overflow-x:hidden;
-}
-
 :root{
   --bg:#f6f8fb;
   --card:#ffffff;
   --text:#0b0b0b;
   --muted:#6b7280;
+  --accent:#000000;
 }
 
 *{
@@ -47,7 +43,7 @@ header{
   text-align:center;
 }
 
-header h1{margin:0;font-size:36px;}
+header h1{margin:0;font-size:36px;letter-spacing:2px;}
 header p{color:#d1d5db;margin-top:12px;}
 
 .lang-switch{
@@ -60,7 +56,7 @@ header p{color:#d1d5db;margin-top:12px;}
   padding:6px;
   display:flex;
   gap:6px;
-  max-width:calc(100vw - 40px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .lang-switch button{
@@ -70,6 +66,7 @@ header p{color:#d1d5db;margin-top:12px;}
   border-radius:20px;
   cursor:pointer;
   font-weight:600;
+  transition: 0.2s;
 }
 
 .lang-switch button.active{
@@ -81,83 +78,70 @@ header p{color:#d1d5db;margin-top:12px;}
   flex:1;
   max-width:900px;
   margin:0 auto;
-  padding:60px 20px;
+  padding:40px 20px 80px;
 }
 
 .card{
   background:#fff;
   border-radius:16px;
   padding:48px;
-  margin-bottom:40px;
+  margin-bottom:30px;
   box-shadow:0 10px 40px rgba(0,0,0,.05);
+}
+
+.card h2 { margin-top: 0; font-size: 24px; color: var(--accent); }
+.card p { line-height: 1.6; color: #4b5563; margin-bottom: 24px; }
+
+/* 独立按钮区样式 */
+.action-area {
+  text-align: center;
+  margin-top: 40px;
+  padding: 20px;
+}
+
+.cta-button {
+  display: inline-block;
+  width: 100%;
+  max-width: 400px;
+  padding: 22px;
+  background: var(--accent);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  border: 2px solid var(--accent);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.cta-button:hover {
+  background: #fff;
+  color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
 }
 
 .site-footer{
   width:100%;
   background:#000;
   color:#fff;
-  padding:96px 20px 80px;
+  padding:80px 20px;
   text-align:center;
-}
-
-.footer-inner{
-  max-width:520px;
-  margin:0 auto;
 }
 
 .footer-qr{
   width:140px;
-  max-width:60vw;
-  margin:0 auto 32px;
-  display:block;
+  margin-bottom:24px;
 }
 
-.footer-brand{
-  font-size:28px;
-  font-weight:700;
-}
-
-.footer-tagline{
-  font-size:14px;
-  opacity:.7;
-  margin-top:6px;
-}
-
-.footer-info{
-  margin-top:36px;
-  font-size:14px;
-  opacity:.9;
-  line-height:1.8;
-}
-
-.footer-divider{
-  width:40px;
-  height:2px;
-  background:#fff;
-  margin:40px auto;
-  opacity:.2;
-}
-
-.footer-cn{
-  font-size:13px;
-  opacity:.55;
-  line-height:1.6;
-}
-
-/* 付费提示文字样式 */
-#contact-dev {
-  margin-top: 24px;
-  padding: 16px;
-  background: #fef2f2;
-  border-left: 4px solid #ef4444;
-  font-size: 14px;
-  color: #b91c1c;
-  border-radius: 4px;
-  line-height: 1.5;
-}
+.footer-brand{ font-size:24px; font-weight:700; margin-bottom: 4px; }
+.footer-info{ opacity: 0.8; font-size: 14px; line-height: 1.8; }
 
 @media(max-width:768px){
   .card{padding:28px;}
+  header{padding:48px 20px;}
 }
 </style>
 </head>
@@ -176,129 +160,68 @@ header p{color:#d1d5db;margin-top:12px;}
 
 <div class="container">
 
-<div class="card">
-  <h2>Personal</h2>
-  <p data-cn="这不是给公司的系统，是给一个真实的人用的：个体户、老板、自由职业者、正在撑生意的人。"
-  data-en="This is not for corporations. It is built for a real human being: the owner, the solo founder, the person holding a business together."></p>
+  <div class="card">
+    <h2>Personal</h2>
+    <p data-cn="这不是给公司的系统，是给一个真实的人用的：个体户、老板、自由职业者、正在撑生意的人。"
+    data-en="This is not for corporations. It is built for a real human being: the owner, the solo founder, the person holding a business together."></p>
 
-  <h2>Enterprise</h2>
-  <p data-cn="你不是在记账，你在经营一个必须活下去并持续赚钱的商业体。"
-  data-en="You are not bookkeeping. You are running something that must survive and generate cash."></p>
+    <h2>Enterprise</h2>
+    <p data-cn="你不是在记账，你在经营一个必须活下去并持续赚钱的商业体。"
+    data-en="You are not bookkeeping. You are running something that must survive and generate cash."></p>
 
-  <h2>Operating</h2>
-  <p data-cn="你看到的不是报表，而是你的生意每天如何运转。"
-  data-en="You are not seeing reports. You are seeing how your business actually operates."></p>
+    <h2>Operating</h2>
+    <p data-cn="你看到的不是报表，而是你的生意每天如何运转。"
+    data-en="You are not seeing reports. You are seeing how your business actually operates."></p>
 
-  <h2>System</h2>
-  <p data-cn="它把感觉变成事实，把焦虑变成可计算的现实。"
-  data-en="It turns feelings into facts and anxiety into something measurable."></p>
-</div>
-
-<div class="card">
-  <h3 data-cn="PEOS 将为你建立" data-en="PEOS will build for you"></h3>
-  <ul>
-    <li data-cn="专属ERP系统" data-en="A personal ERP system"></li>
-    <li data-cn="经营仪表盘" data-en="A business dashboard"></li>
-    <li data-cn="美式商学院课程" data-en="An American-style business education"></li>
-    <li data-cn="真正被理解的经营数据" data-en="Business data that is actually understood"></li>
-  </ul>
-
-  <div style="margin-top: 40px;">
-      <a href="diagnosis.html" id="cta-btn" style="
-          display: inline-block;
-          padding: 18px 32px;
-          background: #000;
-          color: #fff;
-          text-decoration: none;
-          border-radius: 12px;
-          font-weight: 700;
-          font-size: 15px;
-          transition: 0.2s;
-          border: 2px solid #000;
-      " 
-      data-cn="立即执行系统诊断 →" 
-      data-en="EXECUTE DIAGNOSIS NOW →"
-      onmouseover="this.style.background='#fff';this.style.color='#000';"
-      onmouseout="this.style.background='#000';this.style.color='#fff';">
-      </a>
-
-      <div id="contact-dev" style="display: none;">
-        <span data-cn="* 免费测试额度已结束。如需完整 PEOS 系统集成方案，请联系开发者。" 
-              data-en="* Free trial expired. For full PEOS system integration, please contact the developer.">
-        </span>
-      </div>
+    <h2>System</h2>
+    <p data-cn="它把感觉变成事实，把焦虑变成可计算的现实。"
+    data-en="It turns feelings into facts and anxiety into something measurable."></p>
   </div>
-</div>
+
+  <div class="card">
+    <h3 data-cn="PEOS 将为你建立" data-en="PEOS will build for you"></h3>
+    <ul style="line-height: 2; font-size: 16px;">
+      <li data-cn="专属ERP系统" data-en="A personal ERP system"></li>
+      <li data-cn="经营仪表盘" data-en="A business dashboard"></li>
+      <li data-cn="美式商学院课程" data-en="An American-style business education"></li>
+      <li data-cn="真正被理解的经营数据" data-en="Business data that is actually understood"></li>
+    </ul>
+  </div>
+
+  <div class="action-area">
+      <a href="diagnosis.html" id="cta-link" class="cta-button" 
+         data-cn="立即执行系统诊断 →" 
+         data-en="EXECUTE DIAGNOSIS NOW →">
+         立即执行系统诊断 →
+      </a>
+  </div>
 
 </div>
 
 <footer class="site-footer">
-  <div class="footer-inner">
     <img src="/assets/whatsapp-qr.png.jpg" class="footer-qr">
     <div class="footer-brand">NudgeNow</div>
-    <div class="footer-tagline">Reality-as-a-Service</div>
     <div class="footer-info">
       <div>Telegram @nudg5</div>
       <div>New York 347 Madison Ave</div>
+      <div style="margin-top:20px; opacity:0.5; font-size:12px;">Reality-as-a-Service</div>
     </div>
-  </div>
 </footer>
 
 <script>
-const btnCn = document.getElementById('btn-cn');
-const btnEn = document.getElementById('btn-en');
-const ctaBtn = document.getElementById('cta-btn');
-const contactDev = document.getElementById('contact-dev');
-
-/**
- * 核心逻辑：全局北京时间统一倒计时
- */
-function updateButtonStatus() {
-  // 设置截止时间：北京时间 2026-01-25 01:00:00
-  // 使用 ISO 字符串确保在所有浏览器中解析一致 (UTC+8)
-  const DEADLINE = new Date('2026-01-25T01:00:00+08:00').getTime();
-  const now = Date.now();
-
-  if (now >= DEADLINE) {
-    // 【付费模式】
-    ctaBtn.dataset.cn = "支付 $9.9 开启深度诊断 →";
-    ctaBtn.dataset.en = "PAY $9.9 TO START DIAGNOSIS →";
-    // 建议在此处填写你的具体收款链接
-    ctaBtn.href = "YOUR_PAYMENT_URL_HERE"; 
-    
-    // 显示完整系统声明
-    contactDev.style.display = "block";
-  } else {
-    // 【免费模式】
-    ctaBtn.dataset.cn = "立即执行系统诊断 →";
-    ctaBtn.dataset.en = "EXECUTE DIAGNOSIS NOW →";
-    ctaBtn.href = "diagnosis.html";
-    
-    // 隐藏声明
-    contactDev.style.display = "none";
-  }
-}
-
 function setLang(lang){
   document.querySelectorAll("[data-cn]").forEach(el=>{
-    // 针对按钮特殊处理，确保文字能被更新
     el.innerText = el.dataset[lang];
   });
 
-  btnCn.classList.toggle("active", lang === "cn");
-  btnEn.classList.toggle("active", lang === "en");
+  document.getElementById('btn-cn').classList.toggle("active", lang === "cn");
+  document.getElementById('btn-en').classList.toggle("active", lang === "en");
   document.documentElement.lang = (lang === "cn" ? "zh-CN" : "en");
 }
 
-// 1. 先判断时间状态
-updateButtonStatus();
-// 2. 再执行语言渲染
+// 初始设为中文
 setLang("cn");
-
-// 可选：如果用户一直挂着页面，每分钟检查一次是否到时
-setInterval(updateButtonStatus, 60000);
 </script>
-
 
 </body>
 </html>
