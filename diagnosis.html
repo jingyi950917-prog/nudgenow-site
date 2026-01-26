@@ -212,7 +212,7 @@
     window.onload = function() {
         updateUI();
         const params = new URLSearchParams(window.location.search);
-        // 注意：你需要把 NOWPayments 的 Success URL 设为: diagnosis.html?pay=success
+        
         if (params.get('pay') === 'success') {
             const saved = JSON.parse(localStorage.getItem('peos_data'));
             if (saved) {
